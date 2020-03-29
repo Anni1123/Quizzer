@@ -6,7 +6,7 @@ android {
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
         applicationId "com.example.quizzer"
-        minSdkVersion 19
+        minSdkVersion 25
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
