@@ -1,5 +1,6 @@
 package com.example.quizzer;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,9 +50,17 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Viewho
             textView=itemView.findViewById(R.id.title);
 
         }
-        private void setData(String url,String title){
+        private void setData(String url,final String title){
             Glide.with(itemView.getContext()).load(url).into(circleImageView);
             this.textView.setText(title);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Intent(itemView.getContext(),SetsActivity.class);
+                    intent.putExtra("title",title);
+                    itemView.getContext().startActivity(intent);
+                }
+            });
         }
     }
 }
