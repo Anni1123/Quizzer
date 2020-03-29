@@ -20,7 +20,7 @@ public class SetsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getIntent().getStringExtra("title"));
-        GridAdapter gridAdapter=new GridAdapter(16);
+        GridAdapter gridAdapter=new GridAdapter(getIntent().getIntExtra("sets",0),getIntent().getStringExtra("title"));
         gridView.setAdapter(gridAdapter);
     }
 

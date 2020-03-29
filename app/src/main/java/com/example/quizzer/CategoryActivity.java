@@ -24,6 +24,7 @@ public class CategoryActivity extends AppCompatActivity {
     FirebaseDatabase database=FirebaseDatabase.getInstance();
     DatabaseReference reference=database.getReference();
     private RecyclerView recyclerView;
+    List<CategoryModel> list;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,26 +38,23 @@ public class CategoryActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        List<CategoryModel> list=new ArrayList<>();
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        list.add(new CategoryModel("","Category1"));
-        CategoryAdapter categoryAdapter=new CategoryAdapter(list);
+        list=new ArrayList<>();
+
+        final CategoryAdapter categoryAdapter=new CategoryAdapter(list);
         recyclerView.setAdapter(categoryAdapter);
-        reference.child("Categories").child("category1").child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+        reference.child("Categories").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Toast.makeText(CategoryActivity.this,dataSnapshot.getValue().toString(),Toast.LENGTH_LONG).show();
+                for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+                    list.add(dataSnapshot1.getValue(CategoryModel.class));
+                }
+                categoryAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+                Toast.makeText(CategoryActivity.this,databaseError.getMessage(),Toast.LENGTH_LONG).show();
             }
         });
     }

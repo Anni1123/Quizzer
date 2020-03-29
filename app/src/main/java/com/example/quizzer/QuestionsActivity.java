@@ -1,5 +1,6 @@
 package com.example.quizzer;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -12,14 +13,21 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionsActivity extends AppCompatActivity {
-
+    FirebaseDatabase database=FirebaseDatabase.getInstance();
+    DatabaseReference reference=database.getReference();
     private TextView quest,noIndicator;
     private FloatingActionButton bookmark;
     private LinearLayout optionlist;
@@ -28,6 +36,8 @@ public class QuestionsActivity extends AppCompatActivity {
     private int position=0;
     List<QuestionModel> list;
     private int score=0;
+    private String category;
+    private int setNo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,47 +45,60 @@ public class QuestionsActivity extends AppCompatActivity {
         Toolbar toolbar=findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
 
+        category=getIntent().getStringExtra("category");
+        setNo=getIntent().getIntExtra("setNo",1);
         quest=(TextView)findViewById(R.id.question);
         noIndicator=(TextView)findViewById(R.id.number);
         bookmark=(FloatingActionButton)findViewById(R.id.bookmark);
         optionlist=(LinearLayout)findViewById(R.id.l2);
         share=(Button)findViewById(R.id.share);
         next=(Button)findViewById(R.id.next);
-        list=new ArrayList<>();
-        list.add(new QuestionModel("question1","a","b","c","d","a"));
-        list.add(new QuestionModel("question2","a","b","c","d","b"));
-        list.add(new QuestionModel("question3","a","b","c","d","c"));
-        list.add(new QuestionModel("question4","a","b","c","d","d"));
-        list.add(new QuestionModel("question5","a","b","c","d","a"));
-        list.add(new QuestionModel("question6","a","b","c","d","b"));
-        list.add(new QuestionModel("question7","a","b","c","d","c"));
-        list.add(new QuestionModel("question8","a","b","c","d","a"));
-        list.add(new QuestionModel("question9","a","b","c","d","a"));
-        list.add(new QuestionModel("question10","a","b","c","d","d"));
 
-        for (int i=0;i<4;i++){
-            optionlist.getChildAt(i).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    checkAnswer((Button)v);
+
+        list=new ArrayList<>();
+        reference.child("SETS").child(category).child("questions").orderByChild("setNo").equalTo(setNo).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+                    list.add(dataSnapshot1.getValue(QuestionModel.class));
                 }
-            });
-        }
-        playAnim(quest,0,list.get(position).getQuestion());
-        next.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        next.setEnabled(false);
-        next.setAlpha(0.7f);
-        enableOption(true);
-        position++;
-        if(position==list.size()){
-            return;
-        }
-        count=0;
-        playAnim(quest,0,list.get(position).getQuestion());
-    }
-});
+                if(list.size()>0){
+                    for (int i=0;i<4;i++){
+                        optionlist.getChildAt(i).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                checkAnswer((Button)v);
+                            }
+                        });
+                    }
+                    playAnim(quest,0,list.get(position).getQuestion());
+
+                    next.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            next.setEnabled(false);
+                            next.setAlpha(0.7f);
+                            enableOption(true);
+                            position++;
+                            if(position==list.size()){
+                                return;
+                            }
+                            count=0;
+                            playAnim(quest,0,list.get(position).getQuestion());
+                        }
+                    });
+                }else {
+                    Toast.makeText(QuestionsActivity.this,"no questions",Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                Toast.makeText(QuestionsActivity.this,databaseError.getMessage(),Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
     private void playAnim(final View view, final int value, final String data){
         view.animate().alpha(value).scaleY(value).scaleY(value).setDuration(500).setStartDelay(100).setInterpolator(new DecelerateInterpolator())

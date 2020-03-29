@@ -4,14 +4,26 @@ public class QuestionModel {
     private String question;
     private String optiona;
 
-    public QuestionModel(String question, String optiona, String optionb, String optionc, String optiond, String correctans) {
+    public QuestionModel(String question, String optiona, int setNo, String optionb, String optionc, String optiond, String correctans) {
         this.question = question;
         this.optiona = optiona;
+        this.setNo = setNo;
         this.optionb = optionb;
         this.optionc = optionc;
         this.optiond = optiond;
         this.correctans = correctans;
     }
+
+    public int getSetNo() {
+        return setNo;
+    }
+
+    public void setSetNo(int setNo) {
+        this.setNo = setNo;
+    }
+
+    private int setNo;
+
 
     public QuestionModel() {
     }
