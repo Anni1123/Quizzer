@@ -8,12 +8,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryActivity extends AppCompatActivity {
 
+    FirebaseDatabase database=FirebaseDatabase.getInstance();
+    DatabaseReference reference=database.getReference();
     private RecyclerView recyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +48,17 @@ public class CategoryActivity extends AppCompatActivity {
         list.add(new CategoryModel("","Category1"));
         CategoryAdapter categoryAdapter=new CategoryAdapter(list);
         recyclerView.setAdapter(categoryAdapter);
+        reference.child("Categories").child("category1").child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Toast.makeText(CategoryActivity.this,dataSnapshot.getValue().toString(),Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
