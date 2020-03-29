@@ -18,7 +18,7 @@ public class ScoreActivity extends AppCompatActivity {
         score=(TextView)findViewById(R.id.marks);
         total=(TextView)findViewById(R.id.total);
         score.setText(String.valueOf(getIntent().getIntExtra("score",0)));
-        total.setText(String.valueOf(getIntent().getIntExtra("total",0)));
+        total.setText("OUT OF "+String.valueOf(getIntent().getIntExtra("total",0)));
         done=(Button)findViewById(R.id.done);
         done.setOnClickListener(new View.OnClickListener() {
             @Override

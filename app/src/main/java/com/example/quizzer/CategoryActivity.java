@@ -6,8 +6,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -24,6 +26,7 @@ public class CategoryActivity extends AppCompatActivity {
     FirebaseDatabase database=FirebaseDatabase.getInstance();
     DatabaseReference reference=database.getReference();
     private RecyclerView recyclerView;
+    private Dialog load;
     List<CategoryModel> list;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,14 +37,18 @@ public class CategoryActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Categories");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        load=new Dialog(this);
+        load.setContentView(R.layout.loading);
+        load.getWindow().setBackgroundDrawable(getDrawable(R.drawable.rounded_corner));
+        load.getWindow().setLayout(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        load.setCancelable(false);
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         list=new ArrayList<>();
-
         final CategoryAdapter categoryAdapter=new CategoryAdapter(list);
         recyclerView.setAdapter(categoryAdapter);
+        load.show();
         reference.child("Categories").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -49,12 +56,15 @@ public class CategoryActivity extends AppCompatActivity {
                     list.add(dataSnapshot1.getValue(CategoryModel.class));
                 }
                 categoryAdapter.notifyDataSetChanged();
+                load.dismiss();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 Toast.makeText(CategoryActivity.this,databaseError.getMessage(),Toast.LENGTH_LONG).show();
+                load.dismiss();
+                finish();
             }
         });
     }
