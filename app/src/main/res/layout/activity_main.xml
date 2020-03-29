@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="350dp"
             android:textColor="@android:color/white"
-            android:layout_marginLeft="140dp"
+            android:layout_marginLeft="120dp"
             android:background="@drawable/rounded_corner"
             android:textStyle="bold"
             android:stateListAnimator="@null"
@@ -41,7 +41,7 @@
             android:textStyle="bold"
             android:backgroundTint="#BABABA"
             android:stateListAnimator="@null"
-            android:layout_marginLeft="140dp"
+            android:layout_marginLeft="120dp"
             android:background="@drawable/rounded_corner"
             android:layout_height="wrap_content"
             android:text="Bookmarks" />
