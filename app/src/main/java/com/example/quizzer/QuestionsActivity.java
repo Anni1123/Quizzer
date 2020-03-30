@@ -129,6 +129,18 @@ public class QuestionsActivity extends AppCompatActivity {
                             playAnim(quest,0,list.get(position).getQuestion());
                         }
                     });
+                    share.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String body=list.get(position).getQuestion()+ "\n" +list.get(position).getOptiona()+ "\n" +
+                                    list.get(position).getOptionb()+ "\n" +list.get(position).getOptionc()+ "\n" +list.get(position).getOptiond();
+                            Intent shareintent=new Intent(Intent.ACTION_SEND);
+                            shareintent.setType("plane/text");
+                            shareintent.putExtra(Intent.EXTRA_SUBJECT,"Challenge");
+                            shareintent.putExtra(Intent.EXTRA_TEXT,body);
+                            startActivity(Intent.createChooser(shareintent,"Share via "));
+                        }
+                    });
                 }else {
                     Toast.makeText(QuestionsActivity.this,"no questions",Toast.LENGTH_LONG).show();
                 }
