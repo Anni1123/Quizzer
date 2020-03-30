@@ -137,6 +137,6 @@
         android:layout_marginRight="50dp"
         android:clickable="true"
         android:translationY="24dp"
-        app:srcCompat="@drawable/bookmark_custom" />
+        app:srcCompat="@drawable/bookmark" />
 
 </RelativeLayout>

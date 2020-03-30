@@ -6,7 +6,9 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.animation.Animator;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -23,7 +25,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +46,13 @@ public class QuestionsActivity extends AppCompatActivity {
     private String category;
     private int setNo;
     private Dialog load;
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
+    private Gson gson;
+    private List<QuestionModel> bookmarkslist;
+    private static final String FILE_NAME="QUIZZER";
+    private static final String KEY_NAME="QUESTIONS";
+    private int matchedposition;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +61,9 @@ public class QuestionsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         load=new Dialog(this);
         load.setContentView(R.layout.loading);
+        preferences=getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        editor=preferences.edit();
+        gson=new Gson();
         load.getWindow().setBackgroundDrawable(getDrawable(R.drawable.rounded_corner));
         load.getWindow().setLayout(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
         load.setCancelable(false);
@@ -62,7 +77,20 @@ public class QuestionsActivity extends AppCompatActivity {
         share=(Button)findViewById(R.id.share);
         next=(Button)findViewById(R.id.next);
 
-
+        getBookmarks();
+        bookmark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(matchmodel()){
+                    bookmarkslist.remove(matchedposition);
+                    bookmark.setImageDrawable(getDrawable(R.drawable.bookmarkbtn));
+                }
+                else {
+                    bookmarkslist.add(list.get(position));
+                    bookmark.setImageDrawable(getDrawable(R.drawable.bookmark));
+                }
+            }
+        });
         list=new ArrayList<>();
         load.show();
         reference.child("SETS").child(category).child("questions").orderByChild("setNo").equalTo(setNo).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -117,6 +145,13 @@ public class QuestionsActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        storeBookmarks();
+    }
+
     private void playAnim(final View view, final int value, final String data){
         view.animate().alpha(value).scaleY(value).scaleY(value).setDuration(500).setStartDelay(100).setInterpolator(new DecelerateInterpolator())
                 .setListener(new Animator.AnimatorListener() {
@@ -147,7 +182,12 @@ public class QuestionsActivity extends AppCompatActivity {
                             try {
                                 ((TextView)view).setText(data);
                                 noIndicator.setText(position+1+"/"+list.size());
-
+                                if(matchmodel()){
+                                    bookmark.setImageDrawable(getDrawable(R.drawable.bookmark));
+                                }
+                                else {
+                                    bookmark.setImageDrawable(getDrawable(R.drawable.bookmarkbtn));
+                                }
                             }catch (ClassCastException e){
                                 ((Button)view).setText(data);
                             }
@@ -191,5 +231,32 @@ public class QuestionsActivity extends AppCompatActivity {
                optionlist.getChildAt(i).setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#969898")));
            }
         }
+    }
+    private void getBookmarks(){
+        String json=preferences.getString(KEY_NAME,"");
+        Type type=new TypeToken<List<QuestionModel>>(){}.getType();
+        bookmarkslist=gson.fromJson(json,type);
+        if(bookmarkslist==null){
+            bookmarkslist=new ArrayList<>();
+        }
+    }
+    private boolean matchmodel(){
+        boolean matchlist=false;
+        int i=0;
+        for (QuestionModel questionModel:bookmarkslist){
+            if(questionModel.getQuestion().equals(list.get(position).getQuestion())&&
+            questionModel.getCorrectans().equals(list.get(position).getCorrectans())&&
+            questionModel.getSetNo()==list.get(position).getSetNo()){
+                matchlist=true;
+                matchedposition=i;
+            }
+            i++;
+        }
+        return matchlist;
+    }
+    private void storeBookmarks(){
+        String json=gson.toJson(bookmarkslist);
+        editor.putString(KEY_NAME,json);
+        editor.commit();
     }
 }
