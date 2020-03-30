@@ -135,7 +135,7 @@ public class QuestionsActivity extends AppCompatActivity {
                             String body=list.get(position).getQuestion()+ "\n" +list.get(position).getOptiona()+ "\n" +
                                     list.get(position).getOptionb()+ "\n" +list.get(position).getOptionc()+ "\n" +list.get(position).getOptiond();
                             Intent shareintent=new Intent(Intent.ACTION_SEND);
-                            shareintent.setType("plane/text");
+                            shareintent.setType("text/plain");
                             shareintent.putExtra(Intent.EXTRA_SUBJECT,"Challenge");
                             shareintent.putExtra(Intent.EXTRA_TEXT,body);
                             startActivity(Intent.createChooser(shareintent,"Share via "));
