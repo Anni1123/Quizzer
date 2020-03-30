@@ -27,7 +27,6 @@ public class BookmarkActivity extends AppCompatActivity {
     private List<QuestionModel> bookmarkslist;
     private static final String FILE_NAME="QUIZZER";
     private static final String KEY_NAME="QUESTIONS";
-    private int matchedposition;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,20 +35,24 @@ public class BookmarkActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Bookmarks");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         recyclerView=findViewById(R.id.rv);
-        LinearLayoutManager layoutManager=new LinearLayoutManager(this);
-        layoutManager.setOrientation(RecyclerView.VERTICAL);
         preferences=getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
         editor=preferences.edit();
         gson=new Gson();
+        getBookmarks();
+        LinearLayoutManager layoutManager=new LinearLayoutManager(this);
+        layoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
         BookmarksAdapter adapter=new BookmarksAdapter(bookmarkslist);
         recyclerView.setAdapter(adapter);
     }
 
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        storeBookmarks();
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -58,5 +61,17 @@ public class BookmarkActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
+    private void getBookmarks(){
+        String json=preferences.getString(KEY_NAME,"");
+        Type type=new TypeToken<List<QuestionModel>>(){}.getType();
+        bookmarkslist=gson.fromJson(json,type);
+        if(bookmarkslist==null){
+            bookmarkslist=new ArrayList<>();
+        }
+    }
+    private void storeBookmarks(){
+        String json=gson.toJson(bookmarkslist);
+        editor.putString(KEY_NAME,json);
+        editor.commit();
+    }
 }

@@ -183,10 +183,10 @@ public class QuestionsActivity extends AppCompatActivity {
                                 ((TextView)view).setText(data);
                                 noIndicator.setText(position+1+"/"+list.size());
                                 if(matchmodel()){
-                                    bookmark.setImageDrawable(getDrawable(R.drawable.bookmark));
+                                    bookmark.setImageDrawable(getDrawable(R.drawable.bookmarkbtn));
                                 }
                                 else {
-                                    bookmark.setImageDrawable(getDrawable(R.drawable.bookmarkbtn));
+                                    bookmark.setImageDrawable(getDrawable(R.drawable.bookmark));
                                 }
                             }catch (ClassCastException e){
                                 ((Button)view).setText(data);
