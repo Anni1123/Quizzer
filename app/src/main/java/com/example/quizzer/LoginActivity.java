@@ -3,6 +3,7 @@ package com.example.quizzer;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +29,13 @@ public class LoginActivity extends AppCompatActivity {
         password=findViewById(R.id.password);
         login=findViewById(R.id.loginprogress);
         firebaseAuth=FirebaseAuth.getInstance();
+        final Intent intent=new Intent(this,CategoriesActivity.class);
+
+        if(firebaseAuth.getCurrentUser()!=null){
+            startActivity(intent);
+            finish();
+            return;
+        }
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,8 +57,8 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-                        Toast.makeText(LoginActivity.this,"Done",Toast.LENGTH_LONG).show();
-                        }else {
+                            startActivity(intent);
+                            finish();                        }else {
                             Toast.makeText(LoginActivity.this, "Error", Toast.LENGTH_LONG).show();
                         }
                     }
