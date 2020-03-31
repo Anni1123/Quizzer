@@ -20,14 +20,22 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -40,7 +48,10 @@ public class CategoriesActivity extends AppCompatActivity {
         List<CategoriesModel> list;
         private CircleImageView image;
         private EditText name;
+        private CategoriesAdapter categoriesAdapter;
+        private Uri images;
         private Button add;
+        private String downloadUrl;
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -61,7 +72,7 @@ public class CategoriesActivity extends AppCompatActivity {
             layoutManager.setOrientation(RecyclerView.VERTICAL);
             recyclerView.setLayoutManager(layoutManager);
             list=new ArrayList<>();
-            final CategoriesAdapter categoriesAdapter=new CategoriesAdapter(list);
+            categoriesAdapter=new CategoriesAdapter(list);
             recyclerView.setAdapter(categoriesAdapter);
             load.show();
             reference.child("Categories").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -120,7 +131,12 @@ public class CategoriesActivity extends AppCompatActivity {
                         name.setError("required");
                         return;
                     }
+                    if(image==null){
+                        Toast.makeText(CategoriesActivity.this,"Please select a image",Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     categoryd.dismiss();
+                    uploadData();
                 }
             });
         }
@@ -130,10 +146,45 @@ public class CategoriesActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==101){
             if(resultCode==RESULT_OK){
-                Uri images=data.getData();
+               images=data.getData();
                 image.setImageURI(images);
             }
         }
+    }
+    private void uploadData(){
+        StorageReference storageReference= FirebaseStorage.getInstance().getReference();
+        final StorageReference imageRefernec=storageReference.child("Categories").child(images.getLastPathSegment());
+        UploadTask uploadTask=imageRefernec.putFile(images);
+        Task<Uri> uriTask=uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if(!task.isSuccessful()) {
+                   throw task.getException();
+                }
+                return imageRefernec.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                   if(task.isSuccessful()){
+                       downloadUrl=task.getResult().toString();
+                       uploadName();
+                   }
+                    }
+                });
+            }
+        });
+    }
+    private void uploadName(){
+        Map<String ,Object> map=new HashMap<>();
+        map.put("name",name.getText().toString());
+        map.put("sets",0);
+        map.put("url",downloadUrl);
+        final FirebaseDatabase database=FirebaseDatabase.getInstance();
+        database.getReference().child("Categories").child("category"+list.size()).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                list.add(new CategoriesModel(name.getText().toString(),downloadUrl,0));
+            }
+        });
     }
 }
 
