@@ -152,6 +152,7 @@ public class CategoriesActivity extends AppCompatActivity {
         }
     }
     private void uploadData(){
+            load.show();
         StorageReference storageReference= FirebaseStorage.getInstance().getReference();
         final StorageReference imageRefernec=storageReference.child("Categories").child(images.getLastPathSegment());
         UploadTask uploadTask=imageRefernec.putFile(images);
@@ -168,6 +169,7 @@ public class CategoriesActivity extends AppCompatActivity {
                        downloadUrl=task.getResult().toString();
                        uploadName();
                    }
+                   load.dismiss();
                     }
                 });
             }
@@ -182,7 +184,11 @@ public class CategoriesActivity extends AppCompatActivity {
         database.getReference().child("Categories").child("category"+list.size()).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                list.add(new CategoriesModel(name.getText().toString(),downloadUrl,0));
+                if (task.isSuccessful()) {
+                    list.add(new CategoriesModel(name.getText().toString(), downloadUrl, 0));
+                    categoriesAdapter.notifyDataSetChanged();
+                }
+                load.dismiss();
             }
         });
     }
