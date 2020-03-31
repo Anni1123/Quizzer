@@ -181,7 +181,7 @@ public class CategoriesActivity extends AppCompatActivity {
         map.put("sets",0);
         map.put("url",downloadUrl);
         final FirebaseDatabase database=FirebaseDatabase.getInstance();
-        database.getReference().child("Categories").child("category"+list.size()).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+        database.getReference().child("Categories").child("category"+(list.size()+1)).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
