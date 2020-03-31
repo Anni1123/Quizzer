@@ -106,7 +106,7 @@ public class CategoriesActivity extends AppCompatActivity {
             image=categoryd.findViewById(R.id.image);
             name=categoryd.findViewById(R.id.categoryname);
             add=categoryd.findViewById(R.id.addd);
-            add.setOnClickListener(new View.OnClickListener() {
+            image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent galleryintent=new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
