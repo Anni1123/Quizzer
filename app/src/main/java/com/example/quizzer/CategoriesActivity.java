@@ -79,7 +79,7 @@ public class CategoriesActivity extends AppCompatActivity {
     @Override
         public boolean onOptionsItemSelected(@NonNull MenuItem item) {
             if(item.getItemId()==R.id.add){
-              ////Hello
+              Toast.makeText(this,"Done",Toast.LENGTH_LONG).show();
             }
             return super.onOptionsItemSelected(item);
         }
