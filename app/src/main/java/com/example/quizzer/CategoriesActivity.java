@@ -72,14 +72,30 @@ public class CategoriesActivity extends AppCompatActivity {
             layoutManager.setOrientation(RecyclerView.VERTICAL);
             recyclerView.setLayoutManager(layoutManager);
             list=new ArrayList<>();
-            categoriesAdapter=new CategoriesAdapter(list);
+            categoriesAdapter=new CategoriesAdapter(list, new CategoriesAdapter.DeleteListener() {
+                @Override
+                public void onDelete(String key, final int position) {
+                    load.show();
+                    reference.child("Categories").child(key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                       if(task.isSuccessful()){
+                           list.remove(position);
+                           categoriesAdapter.notifyDataSetChanged();
+                       }
+                       load.dismiss();
+                        }
+                    });
+                }
+            });
             recyclerView.setAdapter(categoriesAdapter);
             load.show();
             reference.child("Categories").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
-                        list.add(dataSnapshot1.getValue(CategoriesModel.class));
+                        list.add(new CategoriesModel(dataSnapshot1.child("name").getValue().toString(),dataSnapshot1.child("url").getValue().toString()
+                        ,Integer.parseInt(dataSnapshot1.child("sets").getValue().toString()),dataSnapshot1.getKey()));
                     }
                     categoriesAdapter.notifyDataSetChanged();
                     load.dismiss();
@@ -185,7 +201,7 @@ public class CategoriesActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    list.add(new CategoriesModel(name.getText().toString(), downloadUrl, 0));
+                    list.add(new CategoriesModel(name.getText().toString(), downloadUrl, 0,"category"+(list.size()+1)));
                     categoriesAdapter.notifyDataSetChanged();
                 }
                 load.dismiss();

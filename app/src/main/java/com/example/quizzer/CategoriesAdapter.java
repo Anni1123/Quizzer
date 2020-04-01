@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,11 +17,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Viewholder>{
-    public CategoriesAdapter(List<CategoriesModel> categoriesModels) {
+    public CategoriesAdapter(List<CategoriesModel> categoriesModels,DeleteListener deleteListener) {
         this.categoriesModels = categoriesModels;
+        this.deleteListener=deleteListener;
     }
 
     private List<CategoriesModel> categoriesModels;
+    private DeleteListener deleteListener;
 
     @NonNull
     @Override
@@ -32,7 +35,8 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull Viewholder holder, int position) {
 
-        holder.setData(categoriesModels.get(position).getUrl(),categoriesModels.get(position).getName(),categoriesModels.get(position).getSets());
+        holder.setData(categoriesModels.get(position).getUrl(),categoriesModels.get(position).getName(),categoriesModels.get(position).getSets(),
+                categoriesModels.get(position).getKey(),position);
     }
 
     @Override
@@ -43,14 +47,15 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     class Viewholder extends RecyclerView.ViewHolder{
         private CircleImageView circleImageView;
         private TextView textView;
+        private ImageButton delete;
 
         public Viewholder(@NonNull View itemView) {
             super(itemView);
             circleImageView=(CircleImageView)itemView.findViewById(R.id.image_view);
             textView=itemView.findViewById(R.id.title);
-
+            delete=itemView.findViewById(R.id.deleted);
         }
-        private void setData(String url,final String title,final int sets){
+        private void setData(String url,final String title,final int sets,final String key,final int position){
             Glide.with(itemView.getContext()).load(url).into(circleImageView);
             this.textView.setText(title);
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -62,6 +67,16 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
                     itemView.getContext().startActivity(intent);
                 }
             });
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deleteListener.onDelete(key,position);
+                }
+            });
         }
+    }
+    public interface DeleteListener{
+        public void onDelete(String key,int position);
+
     }
 }

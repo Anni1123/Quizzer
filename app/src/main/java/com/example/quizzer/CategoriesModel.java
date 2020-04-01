@@ -4,13 +4,24 @@ public class CategoriesModel {
     public CategoriesModel() {
     }
 
-    public CategoriesModel(String name, String url, int sets) {
+    public CategoriesModel(String name, String url, int sets,String key) {
         this.name = name;
+        this.key=key;
         this.url = url;
         this.sets = sets;
     }
 
     private String name;
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    private String key;
 
     public String getName() {
         return name;
