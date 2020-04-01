@@ -72,9 +72,9 @@ private Dialog load;
         ((EditText)answer.getChildAt(2)).setText(questionsModel.getC());
         ((EditText)answer.getChildAt(3)).setText(questionsModel.getD());
         for (int i=0;i<answer.getChildCount();i++){
-            if(((EditText)answer.getChildAt(i)).getText().equals(questionsModel.getAnswer())){
+            if(((EditText)answer.getChildAt(i)).getText().toString().equals(questionsModel.getAnswer())){
                 RadioButton radioButton=(RadioButton)option.getChildAt(i);
-                radioButton.toggle();
+                radioButton.setChecked(true);
                 break;
             }
         }
