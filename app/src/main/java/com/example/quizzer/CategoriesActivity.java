@@ -164,6 +164,12 @@ public class CategoriesActivity extends AppCompatActivity {
                         name.setError("required");
                         return;
                     }
+                    for (CategoriesModel categoriesModel:list){
+                        if(name.getText().toString().equals(categoriesModel.getName())){
+                            name.setError("Category Name Already Exists");
+                            return;
+                        }
+                    }
                     if(image==null){
                         Toast.makeText(CategoriesActivity.this,"Please select a image",Toast.LENGTH_LONG).show();
                         return;
