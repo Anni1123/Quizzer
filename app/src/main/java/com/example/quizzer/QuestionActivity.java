@@ -52,7 +52,7 @@ public class QuestionActivity extends AppCompatActivity {
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
          list=new ArrayList<>();
-        adapter=new QuestionAdapter(list);
+        adapter=new QuestionAdapter(list,name);
         recyclerView.setAdapter(adapter);
         getData(name,set);
         add.setOnClickListener(new View.OnClickListener() {

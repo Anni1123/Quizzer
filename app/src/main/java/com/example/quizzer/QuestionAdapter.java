@@ -1,5 +1,6 @@
 package com.example.quizzer;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.viewholder> {
-    public QuestionAdapter(List<QuestionsModel> list) {
+    public QuestionAdapter(List<QuestionsModel> list,String category) {
         this.list = list;
+        this.category=category;
     }
 
     private List<QuestionsModel> list;
+    private String category;
 
     @NonNull
     @Override
@@ -43,9 +46,19 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.viewho
             quest=itemView.findViewById(R.id.quest);
             answer=itemView.findViewById(R.id.ans);
         }
-        private void setData(String question,String answer,int position){
+        private void setData(String question, String answer, final int position){
             this.quest.setText(position+1+","+question);
             this.answer.setText("Ans,"+answer);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent editintent=new Intent(itemView.getContext(),AddNewQuestionActivity.class);
+                    editintent.putExtra("category",category);
+                    editintent.putExtra("set",list.get(position).getSet());
+                    editintent.putExtra("position",position);
+                    itemView.getContext().startActivity(editintent);
+                }
+            });
         }
     }
 }

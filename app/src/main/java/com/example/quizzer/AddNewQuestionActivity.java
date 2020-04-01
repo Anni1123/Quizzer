@@ -26,7 +26,9 @@ public class AddNewQuestionActivity extends AppCompatActivity {
     private LinearLayout answer;
     private Button upload;
     private String categoryname;
-    private int set;
+    private int set,position;
+    private String uid;
+    private QuestionsModel questionsModel;
 private Dialog load;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +45,14 @@ private Dialog load;
         load.getWindow().setLayout(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
         load.setCancelable(false);
         set=getIntent().getIntExtra("set",-1);
+        position=getIntent().getIntExtra("position",-1);
         if(set==-1){
             finish();
             return;
+        }
+        if(position!=-1) {
+         questionsModel=QuestionActivity.list.get(position);
+            setdata();
         }
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +64,22 @@ private Dialog load;
                 uplod();
             }
         });
+    }
+    private void setdata(){
+        question.setText(questionsModel.getQuestion());
+        ((EditText)answer.getChildAt(0)).setText(questionsModel.getA());
+        ((EditText)answer.getChildAt(1)).setText(questionsModel.getB());
+        ((EditText)answer.getChildAt(2)).setText(questionsModel.getC());
+        ((EditText)answer.getChildAt(3)).setText(questionsModel.getD());
+        for (int i=0;i<answer.getChildCount();i++){
+            if(((EditText)answer.getChildAt(i)).getText().equals(questionsModel.getAnswer())){
+                RadioButton radioButton=(RadioButton)option.getChildAt(i);
+                radioButton.toggle();
+                break;
+            }
+        }
+
+
     }
     private void uplod(){
 
@@ -79,13 +102,18 @@ private Dialog load;
         }
         final HashMap<String,Object> map=new HashMap<>();
         map.put("correctans",((EditText)answer.getChildAt(correct)).getText().toString());
-        map.put("optiona",((EditText)answer.getChildAt(3)).getText().toString());
-        map.put("optionb",((EditText)answer.getChildAt(2)).getText().toString());
-        map.put("optionc",((EditText)answer.getChildAt(1)).getText().toString());
-        map.put("optiond",((EditText)answer.getChildAt(0)).getText().toString());
+        map.put("optiona",((EditText)answer.getChildAt(0)).getText().toString());
+        map.put("optionb",((EditText)answer.getChildAt(1)).getText().toString());
+        map.put("optionc",((EditText)answer.getChildAt(2)).getText().toString());
+        map.put("optiond",((EditText)answer.getChildAt(3)).getText().toString());
         map.put("question",question.getText().toString());
         map.put("setNo",set);
-        final String uid=UUID.randomUUID().toString();
+        if(position!=-1){
+            uid=questionsModel.getId();
+        }
+        else {
+           uid = UUID.randomUUID().toString();
+        }
         load.show();
         FirebaseDatabase.getInstance().getReference().child("SETS").child(categoryname).
                 child("questions").child(uid).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -98,7 +126,13 @@ private Dialog load;
                             map.get("optiond").toString(),
                             map.get("correctans").toString(),
                             (int)map.get("setNo"));
-                    QuestionActivity.list.add(questionsModel);
+                    if(position!=-1){
+                        QuestionActivity.list.set(position,questionsModel);
+                    }
+                    else {
+                        QuestionActivity.list.add(questionsModel);
+                    }
+
                     finish();
 
                 }else {
