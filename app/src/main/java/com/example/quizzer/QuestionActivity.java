@@ -83,10 +83,10 @@ public class QuestionActivity extends AppCompatActivity {
                 for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
                     String id=dataSnapshot1.getKey();
                     String question=dataSnapshot1.child("question").getValue().toString();
-                    String a=dataSnapshot1.child("a").getValue().toString();
-                    String b=dataSnapshot1.child("b").getValue().toString();
-                    String c=dataSnapshot1.child("c").getValue().toString();
-                    String d=dataSnapshot1.child("d").getValue().toString();
+                    String a=dataSnapshot1.child("optiona").getValue().toString();
+                    String b=dataSnapshot1.child("optionb").getValue().toString();
+                    String c=dataSnapshot1.child("optionc").getValue().toString();
+                    String d=dataSnapshot1.child("optiond").getValue().toString();
                     String correctans=dataSnapshot1.child("correctans").getValue().toString();
                     list.add(new QuestionsModel(id,question,a,b,c,d,correctans,set));
                 }

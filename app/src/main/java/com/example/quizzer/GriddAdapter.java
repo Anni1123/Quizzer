@@ -57,7 +57,7 @@ public class GriddAdapter extends BaseAdapter {
                 } else {
                     Intent questionIntent = new Intent(parent.getContext(), QuestionActivity.class);
                     questionIntent.putExtra("category", category);
-                    questionIntent.putExtra("setNo", position + 1);
+                    questionIntent.putExtra("setNo", position);
                     parent.getContext().startActivity(questionIntent);
                 }
             }
