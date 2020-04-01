@@ -51,15 +51,15 @@
             <RadioGroup
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:id="@+id/radiogrp"
+                android:id="@+id/options"
                 android:orientation="vertical">
 
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:checked="true"
                     android:buttonTint="@color/colorPrimary"
+                    android:checked="false"
                     android:text="A)"
                     android:textSize="16sp" />
 
@@ -129,6 +129,7 @@
                     android:inputType="textPersonName" />
             </LinearLayout>
         </LinearLayout>
+
         <Button
             android:id="@+id/button"
             android:layout_width="0dp"
@@ -137,14 +138,15 @@
             android:layout_marginTop="24dp"
             android:layout_marginEnd="24dp"
             android:layout_weight="1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             android:background="@drawable/rounded_corner"
             android:backgroundTint="@color/colorPrimary"
+            android:text="Upload"
             android:textColor="@android:color/white"
 
             app:layout_constraintBottom_toBottomOf="parent"
-            android:text="Upload" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linear1" />
 
         <TextView
             android:id="@+id/textView2"

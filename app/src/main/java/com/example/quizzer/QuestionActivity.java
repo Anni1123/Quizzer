@@ -29,14 +29,13 @@ public class QuestionActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private QuestionAdapter adapter;
     private Dialog load;
-    private List<QuestionsModel> list;
+    public static List<QuestionsModel> list;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
         Toolbar toolbar=findViewById(R.id.toolbar4);
         load=new Dialog(this);
-
         load.setContentView(R.layout.loading);
         load.getWindow().setBackgroundDrawable(getDrawable(R.drawable.rounded_corner));
         load.getWindow().setLayout(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -103,4 +102,9 @@ public class QuestionActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapter.notifyDataSetChanged();
+    }
 }
