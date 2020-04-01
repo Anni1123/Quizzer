@@ -7,7 +7,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -74,18 +76,33 @@ public class CategoriesActivity extends AppCompatActivity {
             list=new ArrayList<>();
             categoriesAdapter=new CategoriesAdapter(list, new CategoriesAdapter.DeleteListener() {
                 @Override
-                public void onDelete(String key, final int position) {
-                    load.show();
-                    reference.child("Categories").child(key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                       if(task.isSuccessful()){
-                           list.remove(position);
-                           categoriesAdapter.notifyDataSetChanged();
-                       }
-                       load.dismiss();
-                        }
-                    });
+                public void onDelete(final String key, final int position) {
+                    new AlertDialog.Builder(CategoriesActivity.this,R.style.Theme_AppCompat_Light_Dialog).
+                            setTitle("Delete Category").setMessage("Are you Sure to delete this Category?").
+                            setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    reference.child("Categories").child(key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if(task.isSuccessful()){
+                                                reference.child("SETS").child(list.get(position).getName()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if(task.isSuccessful()){
+                                                            list.remove(position);
+                                                            categoriesAdapter.notifyDataSetChanged();
+                                                        }
+                                                        load.dismiss();
+                                                    }
+                                                });
+                                            }
+                                            load.dismiss();
+                                        }
+                                    });
+                                }
+                            }).setNegativeButton("Cancel",null)
+                            .setIcon(android.R.drawable.ic_dialog_alert).show();
                 }
             });
             recyclerView.setAdapter(categoriesAdapter);

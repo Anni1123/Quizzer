@@ -64,6 +64,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
                     Intent intent=new Intent(itemView.getContext(),SetActivity.class);
                     intent.putExtra("title",title);
                     intent.putExtra("sets",sets);
+                    intent.putExtra("key",key);
                     itemView.getContext().startActivity(intent);
                 }
             });
