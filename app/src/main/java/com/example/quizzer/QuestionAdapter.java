@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,14 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.viewholder> {
-    public QuestionAdapter(List<QuestionsModel> list,String category) {
+    public QuestionAdapter(List<QuestionsModel> list,String category,DeleteListener deleteListener) {
         this.list = list;
+        this.listener=deleteListener;
         this.category=category;
     }
 
     private List<QuestionsModel> list;
     private String category;
-
+    private DeleteListener listener;
     @NonNull
     @Override
     public viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -59,6 +62,16 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.viewho
                     itemView.getContext().startActivity(editintent);
                 }
             });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    listener.onClick(position,list.get(position).getId());
+                    return false;
+                }
+            });
         }
+    }
+    public interface DeleteListener{
+        void onClick(int position,String id);
     }
 }

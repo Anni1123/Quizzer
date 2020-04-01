@@ -6,7 +6,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -15,8 +17,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -29,12 +34,14 @@ public class QuestionActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private QuestionAdapter adapter;
     private Dialog load;
+    private DatabaseReference mref;
     public static List<QuestionsModel> list;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
         Toolbar toolbar=findViewById(R.id.toolbar4);
+        mref= FirebaseDatabase.getInstance().getReference();
         load=new Dialog(this);
         load.setContentView(R.layout.loading);
         load.getWindow().setBackgroundDrawable(getDrawable(R.drawable.rounded_corner));
@@ -52,7 +59,29 @@ public class QuestionActivity extends AppCompatActivity {
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
          list=new ArrayList<>();
-        adapter=new QuestionAdapter(list,name);
+        adapter=new QuestionAdapter(list, name, new QuestionAdapter.DeleteListener() {
+            @Override
+            public void onClick(final int position, final String id) {
+                new AlertDialog.Builder(QuestionActivity.this,R.style.Theme_AppCompat_Light_Dialog).
+                        setTitle("Delete Question").setMessage("Are you Sure to delete this Delete?").
+                        setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                load.show();
+                                mref.child("SETS").child(name).child("questions").child(id).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful()){
+                                        list.remove(position);
+                                        adapter.notifyItemRemoved(position);
+                                        }
+                                        load.dismiss();
+                                    }
+                                });
+                            }
+                        });
+            }
+        });
         recyclerView.setAdapter(adapter);
         getData(name,set);
         add.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +104,7 @@ public class QuestionActivity extends AppCompatActivity {
     }
     private void getData(String name, final int set){
         load.show();
-        FirebaseDatabase.getInstance().getReference().child("SETS").child(name).child("questions").orderByChild("setNo").equalTo(set).addListenerForSingleValueEvent(new ValueEventListener() {
+       mref.child("SETS").child(name).child("questions").orderByChild("setNo").equalTo(set).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
