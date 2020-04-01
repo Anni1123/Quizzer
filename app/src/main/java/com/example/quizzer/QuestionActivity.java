@@ -96,7 +96,7 @@ public class QuestionActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(QuestionActivity.this,"Error",Toast.LENGTH_LONG).show();
+                Toast.makeText(QuestionActivity.this,"Error Found",Toast.LENGTH_LONG).show();
                 load.dismiss();
                 finish();
             }
