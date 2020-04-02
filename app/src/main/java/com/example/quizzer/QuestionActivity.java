@@ -162,7 +162,7 @@ startActivityForResult(Intent.createChooser(intent, "Select File"),102);
                   readfile(data.getData());
                 }
                 else {
-                    Toast.makeText(this,"Please Select an Excel file",Toast.LENGTH_LONG).show();
+                    Toast.makeText(this,"Please Select an Excel file to upload",Toast.LENGTH_LONG).show();
                 }
             }
         }
