@@ -45,7 +45,7 @@ public class SetActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
-                            gridAdapter.sets=gridAdapter.sets+1;
+                            gridAdapter.sets++;
                             gridAdapter.notifyDataSetChanged();
                         }else {
                             Toast.makeText(SetActivity.this,"fail",Toast.LENGTH_LONG).show();
