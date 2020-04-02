@@ -31,7 +31,7 @@ public class AddNewQuestionActivity extends AppCompatActivity {
     private int set,position;
     private String uid;
     private QuestionsModel questionsModel;
-private Dialog load;
+    private Dialog load;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +58,7 @@ private Dialog load;
             return;
         }
         if(position!=-1) {
-         questionsModel=QuestionActivity.list.get(position);
+            questionsModel=QuestionActivity.list.get(position);
             setdata();
         }
         upload.setOnClickListener(new View.OnClickListener() {
@@ -128,7 +128,7 @@ private Dialog load;
             uid=questionsModel.getId();
         }
         else {
-           uid = UUID.randomUUID().toString();
+            uid = UUID.randomUUID().toString();
         }
         load.show();
         FirebaseDatabase.getInstance().getReference().child("SETS").child(categoryname).
@@ -137,7 +137,7 @@ private Dialog load;
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
                     QuestionsModel questionsModel=new QuestionsModel(uid,map.get("question").toString(),map.get("optiona").toString()
-                    ,map.get("optionb").toString(),
+                            ,map.get("optionb").toString(),
                             map.get("optionc").toString(),
                             map.get("optiond").toString(),
                             map.get("correctans").toString(),

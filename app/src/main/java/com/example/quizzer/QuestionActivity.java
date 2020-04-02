@@ -87,7 +87,7 @@ public class QuestionActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-         list=new ArrayList<>();
+        list=new ArrayList<>();
         adapter=new QuestionAdapter(list, name, new QuestionAdapter.DeleteListener() {
             @Override
             public void onLongClick(final int position, final String id) {
@@ -101,8 +101,8 @@ public class QuestionActivity extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if(task.isSuccessful()){
-                                        list.remove(position);
-                                        adapter.notifyItemRemoved(position);
+                                            list.remove(position);
+                                            adapter.notifyItemRemoved(position);
                                         }
                                         load.dismiss();
                                     }
@@ -148,10 +148,10 @@ public class QuestionActivity extends AppCompatActivity {
 
     }
     private void selectfile(){
-Intent intent=new Intent(Intent.ACTION_OPEN_DOCUMENT);
-intent.setType("*/*");
-intent.addCategory(Intent.CATEGORY_OPENABLE);
-startActivityForResult(Intent.createChooser(intent, "Select File"),102);
+        Intent intent=new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivityForResult(Intent.createChooser(intent, "Select File"),102);
     }
 
     @Override
@@ -161,7 +161,7 @@ startActivityForResult(Intent.createChooser(intent, "Select File"),102);
             if(resultCode==RESULT_OK){
                 String filepath=data.getData().getPath();
                 if(true){
-                  readfile(data.getData());
+                    readfile(data.getData());
                 }
                 else {
                     Toast.makeText(this,"Please Select an Excel file to upload",Toast.LENGTH_LONG).show();
@@ -176,112 +176,112 @@ startActivityForResult(Intent.createChooser(intent, "Select File"),102);
             @Override
             public void run() {
 
-        final HashMap<String ,Object> parentmap=new HashMap<>();
-        final List<QuestionsModel> models=new ArrayList<>();
+                final HashMap<String ,Object> parentmap=new HashMap<>();
+                final List<QuestionsModel> models=new ArrayList<>();
 
-        try {
-            InputStream inputStream=getContentResolver().openInputStream(file);
-            XSSFWorkbook workbook=new XSSFWorkbook(inputStream);
-            XSSFSheet sheet=workbook.getSheetAt(0);
-            FormulaEvaluator formulaEvaluator=workbook.getCreationHelper().createFormulaEvaluator();
-            int rowscount=sheet.getPhysicalNumberOfRows();
-            if(rowscount>0){
-                for (int r=0;r<rowscount;r++){
-                    Row row=sheet.getRow(r);
-                    if(row.getPhysicalNumberOfCells()==cellCount) {
-                        String question = getCellData(row,0,formulaEvaluator);
-                        String A = getCellData(row,1,formulaEvaluator);
-                        String B = getCellData(row,2,formulaEvaluator);
-                        String C = getCellData(row,3,formulaEvaluator);
-                        String D = getCellData(row,4,formulaEvaluator);
-                        String correctans = getCellData(row,5,formulaEvaluator);
-                        if (correctans.equals(A)||correctans.equals(B)||correctans.equals(C)||correctans.equals(D)){
-                            HashMap<String,Object> quetionmap=new HashMap<>();
-                            quetionmap.put("question",question);
-                            quetionmap.put("optiona",A);
-                            quetionmap.put("optionb",C);
-                            quetionmap.put("optionc",D);
-                            quetionmap.put("optiond",D);
-                            quetionmap.put("correctans",correctans);
-                            quetionmap.put("setNo",set);
-                            String id= UUID.randomUUID().toString();
-                            parentmap.put(id,quetionmap);
-                            models.add(new QuestionsModel(id,question,A,B,C,D,correctans,set));
-                        }
-                        else {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                            text.setText("Loading");
-                            load.dismiss();
-                            Toast.makeText(QuestionActivity.this,"No Correct answer",Toast.LENGTH_LONG).show();
+                try {
+                    InputStream inputStream=getContentResolver().openInputStream(file);
+                    XSSFWorkbook workbook=new XSSFWorkbook(inputStream);
+                    XSSFSheet sheet=workbook.getSheetAt(0);
+                    FormulaEvaluator formulaEvaluator=workbook.getCreationHelper().createFormulaEvaluator();
+                    int rowscount=sheet.getPhysicalNumberOfRows();
+                    if(rowscount>0){
+                        for (int r=0;r<rowscount;r++){
+                            Row row=sheet.getRow(r);
+                            if(row.getPhysicalNumberOfCells()==cellCount) {
+                                String question = getCellData(row,0,formulaEvaluator);
+                                String A = getCellData(row,1,formulaEvaluator);
+                                String B = getCellData(row,2,formulaEvaluator);
+                                String C = getCellData(row,3,formulaEvaluator);
+                                String D = getCellData(row,4,formulaEvaluator);
+                                String correctans = getCellData(row,5,formulaEvaluator);
+                                if (correctans.equals(A)||correctans.equals(B)||correctans.equals(C)||correctans.equals(D)){
+                                    HashMap<String,Object> quetionmap=new HashMap<>();
+                                    quetionmap.put("question",question);
+                                    quetionmap.put("optiona",A);
+                                    quetionmap.put("optionb",C);
+                                    quetionmap.put("optionc",D);
+                                    quetionmap.put("optiond",D);
+                                    quetionmap.put("correctans",correctans);
+                                    quetionmap.put("setNo",set);
+                                    String id= UUID.randomUUID().toString();
+                                    parentmap.put(id,quetionmap);
+                                    models.add(new QuestionsModel(id,question,A,B,C,D,correctans,set));
                                 }
-                            });
-                            return;
+                                else {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            text.setText("Loading");
+                                            load.dismiss();
+                                            Toast.makeText(QuestionActivity.this,"No Correct answer",Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                    return;
+                                }
+                            }
+                            else {
+                                text.setText("Loading");
+                                load.dismiss();
+                                Toast.makeText(QuestionActivity.this,"row no. "+(r+1)+" has incorrect data",Toast.LENGTH_LONG).show();
+                                return;
+                            }
                         }
-                    }
-                    else {
-                        text.setText("Loading");
-                        load.dismiss();
-                        Toast.makeText(QuestionActivity.this,"row no. "+(r+1)+" has incorrect data",Toast.LENGTH_LONG).show();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                text.setText("Uploading....");
+                                FirebaseDatabase.getInstance().getReference().child("SETS").child(name).
+                                        child("questions").updateChildren(parentmap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful()){
+                                            list.addAll(models);
+                                            adapter.notifyDataSetChanged();
+                                        }else {
+                                            text.setText("Loading");
+                                            Toast.makeText(QuestionActivity.this,"Sometjing went wrond",Toast.LENGTH_LONG).show();
+                                        }
+                                        load.dismiss();
+                                    }
+                                });
+                            }
+                        });
+                    }else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                text.setText("Loading");
+                                load.dismiss();
+                                Toast.makeText(QuestionActivity.this,"File is empty",Toast.LENGTH_LONG).show();
+
+                            }
+                        });
                         return;
                     }
                 }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                text.setText("Uploading....");
-                FirebaseDatabase.getInstance().getReference().child("SETS").child(name).
-                        child("questions").updateChildren(parentmap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                   if(task.isSuccessful()){
-                       list.addAll(models);
-                       adapter.notifyDataSetChanged();
-                   }else {
-                       text.setText("Loading");
-                       Toast.makeText(QuestionActivity.this,"Sometjing went wrond",Toast.LENGTH_LONG).show();
-                   }
-                        load.dismiss();
-                    }
-                });
-                    }
-                });
-            }else {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                text.setText("Loading");
-                load.dismiss();
-                Toast.makeText(QuestionActivity.this,"File is empty",Toast.LENGTH_LONG).show();
-
-                    }
-                });
-                return;
-            }
-        }
-        catch (final FileNotFoundException e){
-            e.printStackTrace();
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-            text.setText("Loading....");
-            load.dismiss();
-            Toast.makeText(QuestionActivity.this,e.getMessage(), Toast.LENGTH_LONG).show();
+                catch (final FileNotFoundException e){
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            text.setText("Loading....");
+                            load.dismiss();
+                            Toast.makeText(QuestionActivity.this,e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
-            });
-        }
-        catch (final IOException e){
-            e.printStackTrace();
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-            text.setText("Loading....");
-            load.dismiss();
-            Toast.makeText(QuestionActivity.this,e.getMessage(), Toast.LENGTH_LONG).show();
+                catch (final IOException e){
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            text.setText("Loading....");
+                            load.dismiss();
+                            Toast.makeText(QuestionActivity.this,e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
-            });
-        }
             }
         });
     }
@@ -296,7 +296,7 @@ startActivityForResult(Intent.createChooser(intent, "Select File"),102);
             case Cell.CELL_TYPE_STRING:
                 return value+cell.getStringCellValue();
             default:
-                    return value;
+                return value;
         }
     }
 
@@ -309,7 +309,7 @@ startActivityForResult(Intent.createChooser(intent, "Select File"),102);
     }
     private void getData(String name, final int set){
         load.show();
-       mref.child("SETS").child(name).child("questions").orderByChild("setNo").equalTo(set).addListenerForSingleValueEvent(new ValueEventListener() {
+        mref.child("SETS").child(name).child("questions").orderByChild("setNo").equalTo(set).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 

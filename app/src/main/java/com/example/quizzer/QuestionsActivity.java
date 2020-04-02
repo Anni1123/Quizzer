@@ -232,7 +232,6 @@ public class QuestionsActivity extends AppCompatActivity {
             selectedOption.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ff0000")));
             Button correctans=(Button)optionlist.findViewWithTag(list.get(position).getCorrectans());
             correctans.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4CAF50")));
-
         }
 
     }

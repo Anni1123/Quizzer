@@ -36,7 +36,7 @@ public class SetActivity extends AppCompatActivity {
         load.getWindow().setBackgroundDrawable(getDrawable(R.drawable.rounded_corner));
         load.getWindow().setLayout(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
         load.setCancelable(false);
-         gridAdapter=new GriddAdapter(getIntent().getIntExtra("sets", 0), getIntent().getStringExtra("title"), new GriddAdapter.GriddListener() {
+        gridAdapter=new GriddAdapter(getIntent().getIntExtra("sets", 0), getIntent().getStringExtra("title"), new GriddAdapter.GriddListener() {
             @Override
             public void addset() {
                 load.show();
@@ -44,13 +44,13 @@ public class SetActivity extends AppCompatActivity {
                 database.getReference().child("Categories").child(getIntent().getStringExtra("key")).child("sets").setValue(getIntent().getIntExtra("sets", 0)+1).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                   if(task.isSuccessful()){
-                     gridAdapter.sets=gridAdapter.sets+1;
-                     gridAdapter.notifyDataSetChanged();
-                   }else {
-                       Toast.makeText(SetActivity.this,"fail",Toast.LENGTH_LONG).show();
-                   }
-                   load.dismiss();
+                        if(task.isSuccessful()){
+                            gridAdapter.sets=gridAdapter.sets+1;
+                            gridAdapter.notifyDataSetChanged();
+                        }else {
+                            Toast.makeText(SetActivity.this,"fail",Toast.LENGTH_LONG).show();
+                        }
+                        load.dismiss();
                     }
                 });
             }
