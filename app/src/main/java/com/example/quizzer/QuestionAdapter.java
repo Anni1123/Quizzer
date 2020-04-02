@@ -65,13 +65,13 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.viewho
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    listener.onClick(position,list.get(position).getId());
+                    listener.onLongClick(position,list.get(position).getId());
                     return false;
                 }
             });
         }
     }
     public interface DeleteListener{
-        void onClick(int position,String id);
+        void onLongClick(int position,String id);
     }
 }

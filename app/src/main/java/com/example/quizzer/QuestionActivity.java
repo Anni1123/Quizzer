@@ -1,15 +1,19 @@
 package com.example.quizzer;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -61,7 +65,7 @@ public class QuestionActivity extends AppCompatActivity {
          list=new ArrayList<>();
         adapter=new QuestionAdapter(list, name, new QuestionAdapter.DeleteListener() {
             @Override
-            public void onClick(final int position, final String id) {
+            public void onLongClick(final int position, final String id) {
                 new AlertDialog.Builder(QuestionActivity.this,R.style.Theme_AppCompat_Light_Dialog).
                         setTitle("Delete Question").setMessage("Are you Sure to delete this Delete?").
                         setPositiveButton("Delete", new DialogInterface.OnClickListener() {
@@ -82,6 +86,17 @@ public class QuestionActivity extends AppCompatActivity {
                         });
             }
         });
+        excel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ActivityCompat.checkSelfPermission(QuestionActivity.this , Manifest.permission.READ_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED){
+                    selectfile();
+                }
+                else {
+                    ActivityCompat.requestPermissions(QuestionActivity.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},101);
+                }
+            }
+        });
         recyclerView.setAdapter(adapter);
         getData(name,set);
         add.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +108,41 @@ public class QuestionActivity extends AppCompatActivity {
                 startActivity(addQuestion);
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode==101){
+            if(grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                selectfile();
+            }else {
+                Toast.makeText(QuestionActivity.this,"Permission Not granted",Toast.LENGTH_LONG).show();
+            }
+        }
+
+    }
+    private void selectfile(){
+Intent intent=new Intent(Intent.ACTION_OPEN_DOCUMENT);
+intent.setType("*/*");
+intent.addCategory(Intent.CATEGORY_OPENABLE);
+startActivityForResult(Intent.createChooser(intent, "Select File"),102);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==102){
+            if(resultCode==RESULT_OK){
+                String filepath=data.getData().getPath();
+                if(filepath.endsWith(".xlsx")){
+                    Toast.makeText(this,"Selected",Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Toast.makeText(this,"Please Select a file",Toast.LENGTH_LONG).show();
+                }
+            }
+        }
     }
 
     @Override
