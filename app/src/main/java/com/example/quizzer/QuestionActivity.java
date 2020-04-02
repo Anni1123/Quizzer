@@ -15,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -60,6 +61,7 @@ public class QuestionActivity extends AppCompatActivity {
     public static List<QuestionsModel> list;
     public static final int cellCount=6;
     private int set;
+    private final int temp=0;
     private String name;
     private TextView text;
     @Override
@@ -167,11 +169,14 @@ startActivityForResult(Intent.createChooser(intent, "Select File"),102);
             }
         }
     }
-    private void readfile(Uri file){
+    private void readfile(final Uri file){
         text.setText("Scanning Question....");
         load.show();
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
 
-        HashMap<String ,Object> parentmap=new HashMap<>();
+        final HashMap<String ,Object> parentmap=new HashMap<>();
         final List<QuestionsModel> models=new ArrayList<>();
 
         try {
@@ -204,19 +209,27 @@ startActivityForResult(Intent.createChooser(intent, "Select File"),102);
                             models.add(new QuestionsModel(id,question,A,B,C,D,correctans,set));
                         }
                         else {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
                             text.setText("Loading");
                             load.dismiss();
-                            Toast.makeText(this,"No Correct answer",Toast.LENGTH_LONG).show();
+                            Toast.makeText(QuestionActivity.this,"No Correct answer",Toast.LENGTH_LONG).show();
+                                }
+                            });
                             return;
                         }
                     }
                     else {
                         text.setText("Loading");
                         load.dismiss();
-                        Toast.makeText(QuestionActivity.this,"row no. "+r+1+" has incorrect data",Toast.LENGTH_LONG).show();
+                        Toast.makeText(QuestionActivity.this,"row no. "+(r+1)+" has incorrect data",Toast.LENGTH_LONG).show();
                         return;
                     }
                 }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
                 text.setText("Uploading....");
                 FirebaseDatabase.getInstance().getReference().child("SETS").child(name).
                         child("questions").updateChildren(parentmap).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -232,25 +245,45 @@ startActivityForResult(Intent.createChooser(intent, "Select File"),102);
                         load.dismiss();
                     }
                 });
+                    }
+                });
             }else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
                 text.setText("Loading");
                 load.dismiss();
                 Toast.makeText(QuestionActivity.this,"File is empty",Toast.LENGTH_LONG).show();
+
+                    }
+                });
                 return;
             }
         }
-        catch (FileNotFoundException e){
+        catch (final FileNotFoundException e){
             e.printStackTrace();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
             text.setText("Loading....");
             load.dismiss();
             Toast.makeText(QuestionActivity.this,e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
         }
-        catch (IOException e){
+        catch (final IOException e){
             e.printStackTrace();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
             text.setText("Loading....");
             load.dismiss();
             Toast.makeText(QuestionActivity.this,e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
         }
+            }
+        });
     }
     private String getCellData(Row row,int cellposition,FormulaEvaluator formulaEvaluator){
         String value="";
