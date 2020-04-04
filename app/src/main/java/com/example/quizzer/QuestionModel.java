@@ -1,8 +1,13 @@
 package com.example.quizzer;
 
 public class QuestionModel {
-    private String question;
-    private String optiona;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getQuestion() {
         return question;
@@ -12,87 +17,77 @@ public class QuestionModel {
         this.question = question;
     }
 
-    public String getOptiona() {
-        return optiona;
+    public String getA() {
+        return A;
     }
 
-    public void setOptiona(String optiona) {
-        this.optiona = optiona;
+    public void setA(String a) {
+        A = a;
     }
 
-    public String getSetNo() {
-        return setNo;
+    public String getB() {
+        return B;
     }
 
-    public void setSetNo(String setNo) {
-        this.setNo = setNo;
+    public void setB(String b) {
+        B = b;
     }
 
-    public String getId() {
-        return id;
+    public String getC() {
+        return C;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setC(String c) {
+        C = c;
     }
 
-    public String getOptionb() {
-        return optionb;
+    public String getD() {
+        return D;
     }
 
-    public void setOptionb(String optionb) {
-        this.optionb = optionb;
+    public void setD(String d) {
+        D = d;
     }
 
-    public String getOptionc() {
-        return optionc;
+    public String getAnswer() {
+        return answer;
     }
 
-    public void setOptionc(String optionc) {
-        this.optionc = optionc;
+    public void setAnswer(String answer) {
+        this.answer = answer;
     }
 
-    public String getOptiond() {
-        return optiond;
+    public String getSet() {
+        return set;
     }
 
-    public void setOptiond(String optiond) {
-        this.optiond = optiond;
+    public void setSet(String set) {
+        this.set = set;
     }
 
-    public String getCorrectans() {
-        return correctans;
-    }
-
-    public void setCorrectans(String correctans) {
-        this.correctans = correctans;
-    }
-
-    private String setNo;
     private String id;
 
+    public QuestionModel(String id, String question, String a, String b, String c, String d, String answer, String set) {
+        this.id = id;
+        this.question = question;
+        A = a;
+        B = b;
+        C = c;
+        D = d;
+        this.answer = answer;
+        this.set = set;
+    }
 
-
-
+    private String question;
+    private String A;
+    private String B;
+    private String C;
+    private String D;
+    private String answer;
+    private String set;
 
     public QuestionModel() {
     }
 
-    private String optionb;
-    private String optionc;
 
-    public QuestionModel(String question, String optiona, String setNo, String id, String optionb, String optionc, String optiond, String correctans) {
-        this.question = question;
-        this.optiona = optiona;
-        this.setNo = setNo;
-        this.id = id;
-        this.optionb = optionb;
-        this.optionc = optionc;
-        this.optiond = optiond;
-        this.correctans = correctans;
-    }
-
-    private String optiond;
-
-    private String correctans;
 }

@@ -136,8 +136,8 @@ public class QuestionsActivity extends AppCompatActivity {
                     share.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            String body=list.get(position).getQuestion()+ "\n" +list.get(position).getOptiona()+ "\n" +
-                                    list.get(position).getOptionb()+ "\n" +list.get(position).getOptionc()+ "\n" +list.get(position).getOptiond();
+                            String body=list.get(position).getQuestion()+ "\n" +list.get(position).getA()+ "\n" +
+                                    list.get(position).getB()+ "\n" +list.get(position).getC()+ "\n" +list.get(position).getD();
                             Intent shareintent=new Intent(Intent.ACTION_SEND);
                             shareintent.setType("text/plain");
                             shareintent.putExtra(Intent.EXTRA_SUBJECT,"Challenge");
@@ -176,16 +176,16 @@ public class QuestionsActivity extends AppCompatActivity {
                         if(value==0&& count<4){
                             String option="";
                             if(count==0){
-                                option=list.get(position).getOptiona();
+                                option=list.get(position).getA();
                             }
                             else  if(count==1){
-                                option=list.get(position).getOptionb();
+                                option=list.get(position).getB();
                             }
                             else  if(count==2){
-                                option=list.get(position).getOptionc();
+                                option=list.get(position).getC();
                             }
                             else  if(count==3){
-                                option=list.get(position).getOptiond();
+                                option=list.get(position).getD();
                             }
                             playAnim(optionlist.getChildAt(count),0,option);
                             count++;
@@ -228,13 +228,13 @@ public class QuestionsActivity extends AppCompatActivity {
         enableOption(false);
         next.setEnabled(true);
         next.setAlpha(1);
-        if(selectedOption.getText().toString().equals(list.get(position).getCorrectans())){
+        if(selectedOption.getText().toString().equals(list.get(position).getAnswer())){
             score++;
             selectedOption.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4CAF50")));
         }
         else {
             selectedOption.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ff0000")));
-            Button correctans=(Button)optionlist.findViewWithTag(list.get(position).getCorrectans());
+            Button correctans=(Button)optionlist.findViewWithTag(list.get(position).getAnswer());
             correctans.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4CAF50")));
         }
 
@@ -260,8 +260,8 @@ public class QuestionsActivity extends AppCompatActivity {
         int i=0;
         for (QuestionModel questionModel:bookmarkslist){
             if(questionModel.getQuestion().equals(list.get(position).getQuestion())&&
-            questionModel.getCorrectans().equals(list.get(position).getCorrectans())&&
-            questionModel.getSetNo()==list.get(position).getSetNo()){
+            questionModel.getAnswer().equals(list.get(position).getAnswer())&&
+            questionModel.getSet()==list.get(position).getSet()){
                 matchlist=true;
                 matchedposition=i;
             }
