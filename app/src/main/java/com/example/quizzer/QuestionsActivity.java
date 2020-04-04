@@ -43,8 +43,7 @@ public class QuestionsActivity extends AppCompatActivity {
     private int position=0;
     List<QuestionModel> list;
     private int score=0;
-    private String category;
-    private int setNo;
+    private String setId;
     private Dialog load;
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
@@ -67,9 +66,7 @@ public class QuestionsActivity extends AppCompatActivity {
         load.getWindow().setBackgroundDrawable(getDrawable(R.drawable.rounded_corner));
         load.getWindow().setLayout(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
         load.setCancelable(false);
-
-        category=getIntent().getStringExtra("category");
-        setNo=getIntent().getIntExtra("setNo",1);
+        setId=getIntent().getStringExtra("setId");
         quest=(TextView)findViewById(R.id.question);
         noIndicator=(TextView)findViewById(R.id.number);
         bookmark=(FloatingActionButton)findViewById(R.id.bookmark);
@@ -93,11 +90,18 @@ public class QuestionsActivity extends AppCompatActivity {
         });
         list=new ArrayList<>();
         load.show();
-        reference.child("SETS").child(category).child("questions").orderByChild("setNo").equalTo(setNo).addListenerForSingleValueEvent(new ValueEventListener() {
+        reference.child("SETS").child(setId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
-                    list.add(dataSnapshot1.getValue(QuestionModel.class));
+                    String id=dataSnapshot1.getKey();
+                    String question=dataSnapshot1.child("question").getValue().toString();
+                    String a=dataSnapshot1.child("optiona").getValue().toString();
+                    String b=dataSnapshot1.child("optionb").getValue().toString();
+                    String c=dataSnapshot1.child("optionc").getValue().toString();
+                    String d=dataSnapshot1.child("optiond").getValue().toString();
+                    String correctans=dataSnapshot1.child("correctans").getValue().toString();
+                    list.add(new QuestionModel(id,question,a,b,c,d,correctans,setId));
                 }
                 if(list.size()>0){
                     for (int i=0;i<4;i++){

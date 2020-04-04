@@ -27,7 +27,7 @@ public class CategoryActivity extends AppCompatActivity {
     DatabaseReference reference=database.getReference();
     private RecyclerView recyclerView;
     private Dialog load;
-    List<CategoryModel> list;
+    public static List<CategoryModel> list;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +53,12 @@ public class CategoryActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
-                    list.add(dataSnapshot1.getValue(CategoryModel.class));
+                    List<String > sets=new ArrayList<>();
+                    for(DataSnapshot dataSnapshot2:dataSnapshot1.child("sets").getChildren()){
+                        sets.add(dataSnapshot2.getKey());
+                    }
+                    list.add(new CategoryModel(dataSnapshot1.child("name").getValue().toString(),dataSnapshot1.child("url").getValue().toString()
+                            ,dataSnapshot1.getKey(),sets));
                 }
                 categoryAdapter.notifyDataSetChanged();
                 load.dismiss();
