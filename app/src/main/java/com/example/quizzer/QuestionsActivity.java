@@ -169,6 +169,9 @@ public class QuestionsActivity extends AppCompatActivity {
     }
 
     private void playAnim(final View view, final int value, final String data){
+        for (int i=0;i<4;i++){
+            optionlist.getChildAt(i).setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#989898")));
+        }
         view.animate().alpha(value).scaleY(value).scaleY(value).setDuration(500).setStartDelay(100).setInterpolator(new DecelerateInterpolator())
                 .setListener(new Animator.AnimatorListener() {
                     @Override
@@ -209,6 +212,9 @@ public class QuestionsActivity extends AppCompatActivity {
                             }
                             view.setTag(data);
                             playAnim(view,1,data);
+                        }
+                        else {
+                            enableOption(true);
                         }
                     }
 
@@ -261,7 +267,7 @@ public class QuestionsActivity extends AppCompatActivity {
         for (QuestionModel questionModel:bookmarkslist){
             if(questionModel.getQuestion().equals(list.get(position).getQuestion())&&
             questionModel.getAnswer().equals(list.get(position).getAnswer())&&
-            questionModel.getSet()==list.get(position).getSet()){
+            questionModel.getSet().equals(list.get(position).getSet())){
                 matchlist=true;
                 matchedposition=i;
             }
