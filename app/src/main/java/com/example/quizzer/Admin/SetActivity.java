@@ -31,12 +31,13 @@ public class SetActivity extends AppCompatActivity {
     private Dialog load;
     private GriddAdapter gridAdapter;
     private String categoryName;
-    private DatabaseReference mref;
+    private String key;
+    private DatabaseReference mref,database;
     private List<String> sets;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sets);
+        setContentView(R.layout.activity_set);
         gridView=(GridView)findViewById(R.id.grid_view);
         Toolbar toolbar=findViewById(R.id.toolbar1);
         setSupportActionBar(toolbar);
@@ -44,8 +45,8 @@ public class SetActivity extends AppCompatActivity {
         categoryName=getIntent().getStringExtra("title");
         getSupportActionBar().setTitle(categoryName);
         mref=FirebaseDatabase.getInstance().getReference();
+        key=getIntent().getStringExtra("key");
         load=new Dialog(this);
-
         load.setContentView(R.layout.loading);
         load.getWindow().setBackgroundDrawable(getDrawable(R.drawable.rounded_corner));
         load.getWindow().setLayout(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -55,9 +56,9 @@ public class SetActivity extends AppCompatActivity {
             @Override
             public void addset() {
                 load.show();
-                DatabaseReference database = FirebaseDatabase.getInstance().getReference();
                 final String id = UUID.randomUUID().toString();
-                database.child("Categories").child(getIntent().getStringExtra("key")).child("sets").child(id).setValue("SET ID").addOnCompleteListener(new OnCompleteListener<Void>() {
+                database=FirebaseDatabase.getInstance().getReference().child("Categories").child(key);
+                database.child("sets").child(id).setValue("SET ID").addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {

@@ -1,6 +1,7 @@
 package com.example.quizzer.Admin;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,7 +79,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         }
     }
     public interface DeleteListener{
-        public void onDelete(String key,int position);
+         void onDelete(String key,int position);
 
     }
 }

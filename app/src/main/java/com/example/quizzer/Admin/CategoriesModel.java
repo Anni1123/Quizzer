@@ -9,6 +9,7 @@ public class CategoriesModel {
 
     private String name;
     String key;
+    private String url;
 
     public String getName() {
         return name;
@@ -41,8 +42,6 @@ public class CategoriesModel {
     public void setSets(List<String> sets) {
         this.sets = sets;
     }
-
-    private String url;
 
     public CategoriesModel(String name, String key, String url, List<String> sets) {
         this.name = name;

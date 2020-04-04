@@ -14,9 +14,9 @@ import com.example.quizzer.R;
 import java.util.List;
 
 public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.viewholder> {
-    public QuestionAdapter(List<QuestionsModel> list, String category, DeleteListener deleteListener) {
+    public QuestionAdapter(List<QuestionsModel> list, String category, DeleteListener listener) {
         this.list = list;
-        this.listener=deleteListener;
+        this.listener=listener;
         this.category=category;
     }
 

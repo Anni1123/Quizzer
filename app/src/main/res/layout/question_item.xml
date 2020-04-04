@@ -5,8 +5,7 @@
     android:padding="16dp"
     android:background="@drawable/square_shape"
     android:backgroundTint="#F3F3F3"
-    android:layout_margin="8dp"
-    android:longClickable="true">
+    android:layout_margin="8dp">
     <TextView
         android:id="@+id/quest"
         android:layout_width="match_parent"

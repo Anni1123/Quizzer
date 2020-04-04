@@ -61,7 +61,7 @@ public class CategoriesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_category);
+        setContentView(R.layout.activity_categories);
         recyclerView=(RecyclerView)findViewById(R.id.rv);
         Toolbar toolbar=findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
