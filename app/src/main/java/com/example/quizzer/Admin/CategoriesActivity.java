@@ -93,17 +93,18 @@ public class CategoriesActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if(task.isSuccessful()){
                                             for(String setIds:list.get(position).getSets()) {
-                                                reference.child("SETS").child("sets").removeValue();
-                                                list.remove(position);
+                                                reference.child("SETS").child(setIds).removeValue();
+
                                             }
+                                            list.remove(position);
                                             categoriesAdapter.notifyDataSetChanged();
-                                                    }
+                                        }
                                         else {
                                             Toast.makeText(CategoriesActivity.this,"Fail",Toast.LENGTH_LONG).show();
-                                            }
+                                        }
                                         load.dismiss();
-                                                }
-                                            });
+                                    }
+                                });
                                         }
 
                         }).setNegativeButton("Cancel",null)

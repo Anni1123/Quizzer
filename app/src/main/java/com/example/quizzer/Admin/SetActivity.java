@@ -88,7 +88,6 @@ public class SetActivity extends AppCompatActivity {
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     if(task.isSuccessful()){
                                                        sets.remove(setId);
-
                                                         gridAdapter.notifyDataSetChanged();
                                                     }
                                                     load.dismiss();
