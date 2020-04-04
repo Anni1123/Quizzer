@@ -227,8 +227,8 @@ public class QuestionActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 text.setText("Uploading....");
-                                FirebaseDatabase.getInstance().getReference().child("SETS").child(name).
-                                        child("questions").updateChildren(parentmap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                FirebaseDatabase.getInstance().getReference().child("SETS").
+                                        child(setId).updateChildren(parentmap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if(task.isSuccessful()){

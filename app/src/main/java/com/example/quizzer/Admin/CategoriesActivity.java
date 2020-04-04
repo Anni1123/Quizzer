@@ -116,7 +116,7 @@ public class CategoriesActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
                     List<String > set=new ArrayList<>();
-                    for(DataSnapshot dataSnapshot2:dataSnapshot1.getChildren()){
+                    for(DataSnapshot dataSnapshot2:dataSnapshot1.child("sets").getChildren()){
                         set.add(dataSnapshot2.getKey());
                     }
                     list.add(new CategoriesModel(dataSnapshot1.child("name").getValue().toString(),dataSnapshot1.child("url").getValue().toString()
