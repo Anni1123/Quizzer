@@ -82,29 +82,30 @@ public class CategoriesActivity extends AppCompatActivity {
             @Override
             public void onDelete(final String key, final int position) {
                 new AlertDialog.Builder(CategoriesActivity.this,R.style.Theme_AppCompat_Light_Dialog).
-                        setTitle("Delete Category").setMessage("Are you Sure to delete this Category?").
+                        setTitle("Delete Category").
+                        setMessage("Are you Sure to delete this Category?").
                         setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                load.show();
                                 reference.child("Categories").child(key).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if(task.isSuccessful()){
-                                            reference.child("SETS").child(list.get(position).getName()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if(task.isSuccessful()){
-                                                        list.remove(position);
-                                                        categoriesAdapter.notifyDataSetChanged();
+                                            for(String setIds:list.get(position).getSets()) {
+                                                reference.child("SETS").child("sets").removeValue();
+                                                list.remove(position);
+                                            }
+                                            categoriesAdapter.notifyDataSetChanged();
                                                     }
-                                                    load.dismiss();
+                                        else {
+                                            Toast.makeText(CategoriesActivity.this,"Fail",Toast.LENGTH_LONG).show();
+                                            }
+                                        load.dismiss();
                                                 }
                                             });
                                         }
-                                        load.dismiss();
-                                    }
-                                });
-                            }
+
                         }).setNegativeButton("Cancel",null)
                         .setIcon(android.R.drawable.ic_dialog_alert).show();
             }
@@ -115,12 +116,12 @@ public class CategoriesActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
-                    List<String > set=new ArrayList<>();
+                    List<String > sets=new ArrayList<>();
                     for(DataSnapshot dataSnapshot2:dataSnapshot1.child("sets").getChildren()){
-                        set.add(dataSnapshot2.getKey());
+                        sets.add(dataSnapshot2.getKey());
                     }
                     list.add(new CategoriesModel(dataSnapshot1.child("name").getValue().toString(),dataSnapshot1.child("url").getValue().toString()
-                            ,dataSnapshot1.getKey(),set));
+                            ,dataSnapshot1.getKey(),sets));
                 }
                 categoriesAdapter.notifyDataSetChanged();
                 load.dismiss();
@@ -181,7 +182,7 @@ public class CategoriesActivity extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(name.getText().toString().isEmpty()){
+                if(name.getText().toString().isEmpty()||name.getText()==null){
                     name.setError("required");
                     return;
                 }
@@ -238,8 +239,8 @@ public class CategoriesActivity extends AppCompatActivity {
     private void uploadName(){
         Map<String ,Object> map=new HashMap<>();
         map.put("name",name.getText().toString());
-        map.put("sets",0);
         map.put("url",downloadUrl);
+        map.put("sets",0);
         final FirebaseDatabase database=FirebaseDatabase.getInstance();
         final String id= UUID.randomUUID().toString();
         database.getReference().child("Categories").child(id).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {

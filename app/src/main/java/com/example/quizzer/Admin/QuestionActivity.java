@@ -93,7 +93,7 @@ public class QuestionActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 load.show();
-                                mref.child("SETS").child(name).child("questions").child(id).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                mref.child("SETS").child(setId).child(id).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if(task.isSuccessful()){

@@ -55,22 +55,21 @@ public class SetActivity extends AppCompatActivity {
             @Override
             public void addset() {
                 load.show();
-                FirebaseDatabase database=FirebaseDatabase.getInstance();
-                final String id= UUID.randomUUID().toString();
-                database.getReference().child("Categories").child(getIntent().getStringExtra("key")).child("sets").child(id).setValue("SET ID").addOnCompleteListener(new OnCompleteListener<Void>() {
+                DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+                final String id = UUID.randomUUID().toString();
+                database.child("Categories").child(getIntent().getStringExtra("key")).child("sets").child(id).setValue("SET ID").addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             sets.add(id);
                             gridAdapter.notifyDataSetChanged();
-                        }else {
-                            Toast.makeText(SetActivity.this,"fail",Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(SetActivity.this, "fail", Toast.LENGTH_LONG).show();
                         }
                         load.dismiss();
                     }
                 });
             }
-
             @Override
             public void onLongClick(final String setId,int position) {
                 new AlertDialog.Builder(SetActivity.this,R.style.Theme_AppCompat_Light_Dialog).
@@ -83,9 +82,19 @@ public class SetActivity extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            gridAdapter.sets.remove(setId);
+                                            mref.child("Categories").child(CategoriesActivity.list.get(getIntent().getIntExtra("position", 0)).getKey()).
+                                                    child("sets").child(setId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if(task.isSuccessful()){
+                                                       sets.remove(setId);
 
-                                            gridAdapter.notifyDataSetChanged();
+                                                        gridAdapter.notifyDataSetChanged();
+                                                    }
+                                                    load.dismiss();
+                                                }
+                                            });
+
                                         } else {
                                             Toast.makeText(SetActivity.this,"Error",Toast.LENGTH_LONG).show();
                                         }

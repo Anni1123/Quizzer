@@ -57,8 +57,9 @@ public class GriddAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (position == 0) {
-                    gridListener.addset();
-                } else {
+                  gridListener.addset();
+                }
+                else {
                     Intent questionIntent = new Intent(parent.getContext(), QuestionActivity.class);
                     questionIntent.putExtra("category", category);
                     questionIntent.putExtra("setId", sets.get(position-1));
