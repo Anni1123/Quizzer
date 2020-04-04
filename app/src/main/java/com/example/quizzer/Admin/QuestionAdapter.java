@@ -1,4 +1,4 @@
-package com.example.quizzer;
+package com.example.quizzer.Admin;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -9,12 +9,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.quizzer.Admin.AddNewQuestionActivity;
+import com.example.quizzer.R;
 
 import java.util.List;
 
 public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.viewholder> {
-    public QuestionAdapter(List<QuestionsModel> list,String category,DeleteListener deleteListener) {
+    public QuestionAdapter(List<QuestionsModel> list, String category, DeleteListener deleteListener) {
         this.list = list;
         this.listener=deleteListener;
         this.category=category;

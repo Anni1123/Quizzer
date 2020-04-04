@@ -9,11 +9,13 @@ import android.widget.TextView;
 
 import com.example.quizzer.R;
 
+import java.util.List;
+
 public class GriddAdapter extends BaseAdapter {
 
-    public int sets=0;
+    public List<String> sets;
     protected GriddListener gridListener;
-    public GriddAdapter(int sets, String category,GriddListener gridListener) {
+    public GriddAdapter(List<String> sets, String category,GriddListener gridListener) {
         this.sets = sets;
         this.gridListener=gridListener;
         this.category = category;
@@ -22,7 +24,7 @@ public class GriddAdapter extends BaseAdapter {
     private String category;
     @Override
     public int getCount() {
-        return sets+1;
+        return sets.size()+1;
     }
 
     @Override
@@ -59,7 +61,7 @@ public class GriddAdapter extends BaseAdapter {
                 } else {
                     Intent questionIntent = new Intent(parent.getContext(), QuestionActivity.class);
                     questionIntent.putExtra("category", category);
-                    questionIntent.putExtra("setNo", position);
+                    questionIntent.putExtra("setId", sets.get(position-1));
                     parent.getContext().startActivity(questionIntent);
                 }
             }
@@ -68,7 +70,7 @@ public class GriddAdapter extends BaseAdapter {
             @Override
             public boolean onLongClick(View v) {
                 if(position!=0) {
-                    gridListener.onLongClick(position);
+                    gridListener.onLongClick(sets.get(position-1),position);
                 }
                 return false;
             }
@@ -77,6 +79,6 @@ public class GriddAdapter extends BaseAdapter {
     }
     public interface GriddListener{
         public void addset();
-        void onLongClick(int setNo);
+        void onLongClick(String setId,int position);
     }
 }

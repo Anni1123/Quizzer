@@ -22,6 +22,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.List;
+import java.util.UUID;
+
 public class SetActivity extends AppCompatActivity {
 
     private GridView gridView;
@@ -29,6 +32,7 @@ public class SetActivity extends AppCompatActivity {
     private GriddAdapter gridAdapter;
     private String categoryName;
     private DatabaseReference mref;
+    private List<String> sets;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,16 +50,18 @@ public class SetActivity extends AppCompatActivity {
         load.getWindow().setBackgroundDrawable(getDrawable(R.drawable.rounded_corner));
         load.getWindow().setLayout(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
         load.setCancelable(false);
-        gridAdapter=new GriddAdapter(getIntent().getIntExtra("sets", 0), getIntent().getStringExtra("title"), new GriddAdapter.GriddListener() {
+        sets=CategoriesActivity.list.get(getIntent().getIntExtra("position", 0)).getSets();
+        gridAdapter=new GriddAdapter(sets, getIntent().getStringExtra("title"), new GriddAdapter.GriddListener() {
             @Override
             public void addset() {
                 load.show();
                 FirebaseDatabase database=FirebaseDatabase.getInstance();
-                database.getReference().child("Categories").child(getIntent().getStringExtra("key")).child("sets").setValue(getIntent().getIntExtra("sets", 0)+1).addOnCompleteListener(new OnCompleteListener<Void>() {
+                final String id= UUID.randomUUID().toString();
+                database.getReference().child("Categories").child(getIntent().getStringExtra("key")).child("sets").child(id).setValue("SET ID").addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
-                            gridAdapter.sets++;
+                            sets.add(id);
                             gridAdapter.notifyDataSetChanged();
                         }else {
                             Toast.makeText(SetActivity.this,"fail",Toast.LENGTH_LONG).show();
@@ -66,29 +72,23 @@ public class SetActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onLongClick(final int setNo) {
+            public void onLongClick(final String setId,int position) {
                 new AlertDialog.Builder(SetActivity.this,R.style.Theme_AppCompat_Light_Dialog).
-                        setTitle("Delete Set"+setNo).setMessage("Are you Sure to delete this Delete?").
+                        setTitle("Delete Set"+position).setMessage("Are you Sure to delete this Delete?").
                         setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 load.show();
-                                mref.child("SETS").child(categoryName).child("questions").orderByChild("setNo").equalTo(setNo).addListenerForSingleValueEvent(new ValueEventListener() {
+                                mref.child("SETS").child(setId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            gridAdapter.sets.remove(setId);
 
-                                        for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
-                                            String id=dataSnapshot1.getKey();
-                                            mref.child("SETS").child(categoryName).child("questions").child(id).removeValue();
+                                            gridAdapter.notifyDataSetChanged();
+                                        } else {
+                                            Toast.makeText(SetActivity.this,"Error",Toast.LENGTH_LONG).show();
                                         }
-                                        gridAdapter.sets--;
-                                        load.dismiss();
-                                        gridAdapter.notifyDataSetChanged();
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                                        Toast.makeText(SetActivity.this,"Error Found",Toast.LENGTH_LONG).show();
                                         load.dismiss();
                                     }
                                 });

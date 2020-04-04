@@ -1,27 +1,14 @@
 package com.example.quizzer.Admin;
 
+import java.util.List;
+
 public class CategoriesModel {
     public CategoriesModel() {
     }
 
-    public CategoriesModel(String name, String url, int sets,String key) {
-        this.name = name;
-        this.key=key;
-        this.url = url;
-        this.sets = sets;
-    }
 
     private String name;
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    private String key;
+    String key;
 
     public String getName() {
         return name;
@@ -29,6 +16,14 @@ public class CategoriesModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getUrl() {
@@ -39,14 +34,22 @@ public class CategoriesModel {
         this.url = url;
     }
 
-    public int getSets() {
+    public List<String> getSets() {
         return sets;
     }
 
-    public void setSets(int sets) {
+    public void setSets(List<String> sets) {
         this.sets = sets;
     }
 
     private String url;
-    private int sets;
+
+    public CategoriesModel(String name, String key, String url, List<String> sets) {
+        this.name = name;
+        this.key = key;
+        this.url = url;
+        this.sets = sets;
+    }
+
+    private List<String> sets;
 }

@@ -15,7 +15,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.example.quizzer.QuestionsModel;
 import com.example.quizzer.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -30,7 +29,8 @@ public class AddNewQuestionActivity extends AppCompatActivity {
     private LinearLayout answer;
     private Button upload;
     private String categoryname;
-    private int set,position;
+    private String setId;
+    private int position;
     private String uid;
     private QuestionsModel questionsModel;
     private Dialog load;
@@ -53,9 +53,9 @@ public class AddNewQuestionActivity extends AppCompatActivity {
         load.getWindow().setBackgroundDrawable(getDrawable(R.drawable.rounded_corner));
         load.getWindow().setLayout(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
         load.setCancelable(false);
-        set=getIntent().getIntExtra("set",-1);
+        setId=getIntent().getStringExtra("setId");
         position=getIntent().getIntExtra("position",-1);
-        if(set==-1){
+        if(setId==null){
             finish();
             return;
         }
@@ -125,7 +125,7 @@ public class AddNewQuestionActivity extends AppCompatActivity {
         map.put("optionc",((EditText)answer.getChildAt(2)).getText().toString());
         map.put("optiond",((EditText)answer.getChildAt(3)).getText().toString());
         map.put("question",question.getText().toString());
-        map.put("setNo",set);
+        map.put("setId",setId);
         if(position!=-1){
             uid=questionsModel.getId();
         }
@@ -133,8 +133,7 @@ public class AddNewQuestionActivity extends AppCompatActivity {
             uid = UUID.randomUUID().toString();
         }
         load.show();
-        FirebaseDatabase.getInstance().getReference().child("SETS").child(categoryname).
-                child("questions").child(uid).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+        FirebaseDatabase.getInstance().getReference().child("SETS").child(setId).child(uid).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
@@ -143,7 +142,7 @@ public class AddNewQuestionActivity extends AppCompatActivity {
                             map.get("optionc").toString(),
                             map.get("optiond").toString(),
                             map.get("correctans").toString(),
-                            (int)map.get("setNo"));
+                            map.get("setId").toString());
                     if(position!=-1){
                         QuestionActivity.list.set(position,questionsModel);
                     }

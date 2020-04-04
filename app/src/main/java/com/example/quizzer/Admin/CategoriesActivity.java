@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -50,7 +51,7 @@ public class CategoriesActivity extends AppCompatActivity {
     DatabaseReference reference=database.getReference();
     private RecyclerView recyclerView;
     private Dialog load,categoryd;
-    List<CategoriesModel> list;
+     public  static List<CategoriesModel> list;
     private CircleImageView image;
     private EditText name;
     private CategoriesAdapter categoriesAdapter;
@@ -114,8 +115,12 @@ public class CategoriesActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+                    List<String > set=new ArrayList<>();
+                    for(DataSnapshot dataSnapshot2:dataSnapshot1.getChildren()){
+                        set.add(dataSnapshot2.getKey());
+                    }
                     list.add(new CategoriesModel(dataSnapshot1.child("name").getValue().toString(),dataSnapshot1.child("url").getValue().toString()
-                            ,Integer.parseInt(dataSnapshot1.child("sets").getValue().toString()),dataSnapshot1.getKey()));
+                            ,dataSnapshot1.getKey(),set));
                 }
                 categoriesAdapter.notifyDataSetChanged();
                 load.dismiss();
@@ -145,7 +150,7 @@ public class CategoriesActivity extends AppCompatActivity {
         if(item.getItemId()==R.id.logout){
             new AlertDialog.Builder(CategoriesActivity.this,R.style.Theme_AppCompat_Light_Dialog).
                     setTitle("Logging Out").setMessage("Are you Sure to delete this Delete?").
-                    setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    setPositiveButton("Logout", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             load.show();
@@ -236,11 +241,12 @@ public class CategoriesActivity extends AppCompatActivity {
         map.put("sets",0);
         map.put("url",downloadUrl);
         final FirebaseDatabase database=FirebaseDatabase.getInstance();
-        database.getReference().child("Categories").child("category"+(list.size()+1)).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+        final String id= UUID.randomUUID().toString();
+        database.getReference().child("Categories").child(id).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    list.add(new CategoriesModel(name.getText().toString(), downloadUrl, 0,"category"+(list.size()+1)));
+                    list.add(new CategoriesModel(name.getText().toString(),id, downloadUrl,new ArrayList<String>()));
                     categoriesAdapter.notifyDataSetChanged();
                 }
                 load.dismiss();

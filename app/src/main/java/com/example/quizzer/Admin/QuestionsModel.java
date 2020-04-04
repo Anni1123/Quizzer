@@ -1,12 +1,6 @@
-package com.example.quizzer;
+package com.example.quizzer.Admin;
 
 public class QuestionsModel {
-    private String id,question,A,B,C,D,answer;
-    private int set;
-
-    public QuestionsModel() {
-    }
-
     public String getId() {
         return id;
     }
@@ -63,15 +57,17 @@ public class QuestionsModel {
         this.answer = answer;
     }
 
-    public int getSet() {
+    public String getSet() {
         return set;
     }
 
-    public void setSet(int set) {
+    public void setSet(String set) {
         this.set = set;
     }
 
-    public QuestionsModel(String id, String question, String a, String b, String c, String d, String answer, int set) {
+    private String id;
+
+    public QuestionsModel(String id, String question, String a, String b, String c, String d, String answer, String set) {
         this.id = id;
         this.question = question;
         A = a;
@@ -81,4 +77,17 @@ public class QuestionsModel {
         this.answer = answer;
         this.set = set;
     }
+
+    private String question;
+    private String A;
+    private String B;
+    private String C;
+    private String D;
+    private String answer;
+    private String set;
+
+    public QuestionsModel() {
+    }
+
+
 }

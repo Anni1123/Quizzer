@@ -24,8 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.quizzer.QuestionAdapter;
-import com.example.quizzer.QuestionsModel;
 import com.example.quizzer.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -58,7 +56,7 @@ public class QuestionActivity extends AppCompatActivity {
     private DatabaseReference mref;
     public static List<QuestionsModel> list;
     public static final int cellCount=6;
-    private int set;
+    private String setId;
     private final int temp=0;
     private String name;
     private TextView text;
@@ -75,9 +73,9 @@ public class QuestionActivity extends AppCompatActivity {
         load.setCancelable(false);
         text=load.findViewById(R.id.textv);
         name=getIntent().getStringExtra("category");
-        set=getIntent().getIntExtra("setNo",1);
+        setId=getIntent().getStringExtra("setId");
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(name+"/set"+set);
+        getSupportActionBar().setTitle(name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         add=findViewById(R.id.addbtn);
         excel=findViewById(R.id.excel);
@@ -121,13 +119,13 @@ public class QuestionActivity extends AppCompatActivity {
             }
         });
         recyclerView.setAdapter(adapter);
-        getData(name,set);
+        getData(name,setId);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent addQuestion=new Intent(QuestionActivity.this, AddNewQuestionActivity.class);
                 addQuestion.putExtra("category",name);
-                addQuestion.putExtra("set",set);
+                addQuestion.putExtra("setId",setId);
                 startActivity(addQuestion);
             }
         });
@@ -201,10 +199,10 @@ public class QuestionActivity extends AppCompatActivity {
                                     quetionmap.put("optionc",D);
                                     quetionmap.put("optiond",D);
                                     quetionmap.put("correctans",correctans);
-                                    quetionmap.put("setNo",set);
+                                    quetionmap.put("setId",setId);
                                     String id= UUID.randomUUID().toString();
                                     parentmap.put(id,quetionmap);
-                                    models.add(new QuestionsModel(id,question,A,B,C,D,correctans,set));
+                                    models.add(new QuestionsModel(id,question,A,B,C,D,correctans,setId));
                                 }
                                 else {
                                     runOnUiThread(new Runnable() {
@@ -305,9 +303,9 @@ public class QuestionActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    private void getData(String name, final int set){
+    private void getData(String name, final String setId){
         load.show();
-        mref.child("SETS").child(name).child("questions").orderByChild("setNo").equalTo(set).addListenerForSingleValueEvent(new ValueEventListener() {
+        mref.child("SETS").child(setId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -319,7 +317,7 @@ public class QuestionActivity extends AppCompatActivity {
                     String c=dataSnapshot1.child("optionc").getValue().toString();
                     String d=dataSnapshot1.child("optiond").getValue().toString();
                     String correctans=dataSnapshot1.child("correctans").getValue().toString();
-                    list.add(new QuestionsModel(id,question,a,b,c,d,correctans,set));
+                    list.add(new QuestionsModel(id,question,a,b,c,d,correctans,setId));
                 }
                 load.dismiss();
                 adapter.notifyDataSetChanged();

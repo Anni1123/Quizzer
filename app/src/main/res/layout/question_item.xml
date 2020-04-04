@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Questions"
-        android:drawableEnd="@drawable/forward"
+        android:drawableEnd="@drawable/forwarding"
         android:textColor="@android:color/black"
         android:textSize="16sp"/>
     <TextView
