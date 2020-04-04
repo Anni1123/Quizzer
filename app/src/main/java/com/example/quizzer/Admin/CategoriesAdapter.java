@@ -1,4 +1,4 @@
-package com.example.quizzer;
+package com.example.quizzer.Admin;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
+import com.example.quizzer.R;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Viewholder>{
-    public CategoriesAdapter(List<CategoriesModel> categoriesModels,DeleteListener deleteListener) {
+    public CategoriesAdapter(List<CategoriesModel> categoriesModels, DeleteListener deleteListener) {
         this.categoriesModels = categoriesModels;
         this.deleteListener=deleteListener;
     }
@@ -61,7 +62,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent=new Intent(itemView.getContext(),SetActivity.class);
+                    Intent intent=new Intent(itemView.getContext(), SetActivity.class);
                     intent.putExtra("title",title);
                     intent.putExtra("sets",sets);
                     intent.putExtra("key",key);

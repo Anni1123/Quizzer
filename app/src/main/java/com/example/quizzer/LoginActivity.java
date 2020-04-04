@@ -8,9 +8,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.quizzer.Admin.CategoriesActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -29,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
         password=findViewById(R.id.password);
         login=findViewById(R.id.loginprogress);
         firebaseAuth=FirebaseAuth.getInstance();
-        final Intent intent=new Intent(this,CategoriesActivity.class);
+        final Intent intent=new Intent(this, CategoriesActivity.class);
 
         if(firebaseAuth.getCurrentUser()!=null){
             startActivity(intent);

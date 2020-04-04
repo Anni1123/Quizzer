@@ -4,12 +4,12 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.quizzer.Admin.AddNewQuestionActivity;
 
 import java.util.List;
 
@@ -55,7 +55,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.viewho
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent editintent=new Intent(itemView.getContext(),AddNewQuestionActivity.class);
+                    Intent editintent=new Intent(itemView.getContext(), AddNewQuestionActivity.class);
                     editintent.putExtra("category",category);
                     editintent.putExtra("set",list.get(position).getSet());
                     editintent.putExtra("position",position);
@@ -71,6 +71,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.viewho
             });
         }
     }
+
     public interface DeleteListener{
         void onLongClick(int position,String id);
     }

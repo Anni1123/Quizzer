@@ -1,4 +1,4 @@
-package com.example.quizzer;
+package com.example.quizzer.Admin;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +15,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.quizzer.QuestionsModel;
+import com.example.quizzer.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.FirebaseDatabase;
@@ -58,7 +60,7 @@ public class AddNewQuestionActivity extends AppCompatActivity {
             return;
         }
         if(position!=-1) {
-            questionsModel=QuestionActivity.list.get(position);
+            questionsModel= QuestionActivity.list.get(position);
             setdata();
         }
         upload.setOnClickListener(new View.OnClickListener() {

@@ -1,4 +1,4 @@
-package com.example.quizzer;
+package com.example.quizzer.Admin;
 
 public class CategoriesModel {
     public CategoriesModel() {

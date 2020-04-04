@@ -1,4 +1,4 @@
-package com.example.quizzer;
+package com.example.quizzer.Admin;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.example.quizzer.R;
 
 public class GriddAdapter extends BaseAdapter {
 
@@ -62,9 +64,19 @@ public class GriddAdapter extends BaseAdapter {
                 }
             }
         });
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if(position!=0) {
+                    gridListener.onLongClick(position);
+                }
+                return false;
+            }
+        });
         return view;
     }
     public interface GriddListener{
         public void addset();
+        void onLongClick(int setNo);
     }
 }
