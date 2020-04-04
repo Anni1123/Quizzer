@@ -22,10 +22,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.quizzer.MainActivity;
 import com.example.quizzer.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -139,6 +141,19 @@ public class CategoriesActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId()==R.id.add){
             categoryd.show();
+        }
+        if(item.getItemId()==R.id.logout){
+            new AlertDialog.Builder(CategoriesActivity.this,R.style.Theme_AppCompat_Light_Dialog).
+                    setTitle("Logging Out").setMessage("Are you Sure to delete this Delete?").
+                    setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            load.show();
+                            FirebaseAuth.getInstance().signOut();
+                            startActivity(new Intent(CategoriesActivity.this, MainActivity.class));
+                            finish();
+                        }
+                    }).setNegativeButton("Cancel",null).setIcon(R.drawable.ic_dialog_alert).show();
         }
         return super.onOptionsItemSelected(item);
     }
