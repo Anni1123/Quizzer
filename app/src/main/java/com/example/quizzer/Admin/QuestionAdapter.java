@@ -14,7 +14,7 @@ import com.example.quizzer.R;
 import java.util.List;
 
 public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.viewholder> {
-    public QuestionAdapter(List<QuestionsModel> list, String category, DeleteListener listener) {
+    public QuestionAdapter(List<QuestionsModel> list, String category, QuestionListener listener) {
         this.list = list;
         this.listener=listener;
         this.category=category;
@@ -22,7 +22,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.viewho
 
     private List<QuestionsModel> list;
     private String category;
-    private DeleteListener listener;
+    private QuestionListener listener;
     @NonNull
     @Override
     public viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -72,7 +72,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.viewho
         }
     }
 
-    public interface DeleteListener{
+    public interface QuestionListener{
         void onLongClick(int position,String id);
     }
 }

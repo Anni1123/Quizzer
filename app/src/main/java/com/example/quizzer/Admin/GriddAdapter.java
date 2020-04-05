@@ -79,7 +79,7 @@ public class GriddAdapter extends BaseAdapter {
         return view;
     }
     public interface GriddListener{
-        public void addset();
+        void addset();
         void onLongClick(String setId,int position);
     }
 }

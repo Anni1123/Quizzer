@@ -57,7 +57,7 @@ public class CategoryActivity extends AppCompatActivity {
                     for(DataSnapshot dataSnapshot2:dataSnapshot1.child("sets").getChildren()){
                         sets.add(dataSnapshot2.getKey());
                     }
-                    list.add(new CategoryModel(dataSnapshot1.child("name").getValue().toString(),dataSnapshot1.child("url").getValue().toString()
+                    list.add(new CategoryModel(dataSnapshot1.child("name").getValue().toString()
                             ,dataSnapshot1.getKey(),sets));
                 }
                 categoryAdapter.notifyDataSetChanged();

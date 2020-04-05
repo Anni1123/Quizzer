@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,7 +33,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Viewho
     @Override
     public void onBindViewHolder(@NonNull Viewholder holder, int position) {
 
-        holder.setData(categoryModels.get(position).getUrl(),categoryModels.get(position).getName(),position);
+        holder.setData(categoryModels.get(position).getName(),position);
     }
 
     @Override
@@ -43,16 +44,17 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Viewho
     class Viewholder extends RecyclerView.ViewHolder{
         private CircleImageView circleImageView;
         private TextView textView;
+        private ImageButton imageButton;
 
         public Viewholder(@NonNull View itemView) {
             super(itemView);
             circleImageView=(CircleImageView)itemView.findViewById(R.id.image_view);
             textView=itemView.findViewById(R.id.title);
-
+            imageButton=itemView.findViewById(R.id.deleted);
         }
-        private void setData(String url,final String title,final int position){
-            Glide.with(itemView.getContext()).load(url).into(circleImageView);
+        private void setData(final String title,final int position){
             this.textView.setText(title);
+            imageButton.setVisibility(View.INVISIBLE);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

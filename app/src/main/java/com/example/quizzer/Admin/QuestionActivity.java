@@ -84,7 +84,7 @@ public class QuestionActivity extends AppCompatActivity {
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         list=new ArrayList<>();
-        adapter=new QuestionAdapter(list, name, new QuestionAdapter.DeleteListener() {
+        adapter=new QuestionAdapter(list, name, new QuestionAdapter.QuestionListener() {
             @Override
             public void onLongClick(final int position, final String id) {
                 new AlertDialog.Builder(QuestionActivity.this,R.style.Theme_AppCompat_Light_Dialog).
