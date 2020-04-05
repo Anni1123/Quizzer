@@ -50,7 +50,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.viewho
             super(itemView);
             quest=itemView.findViewById(R.id.quest);
             answer=itemView.findViewById(R.id.ans);
-            delete=itemView.findViewById(R.id.deleteing);
+
         }
         private void setData(String question, String answer, final int position){
             this.quest.setText(position+1+","+question);
@@ -65,12 +65,13 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.viewho
                     itemView.getContext().startActivity(editintent);
                 }
             });
-            delete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        listener.onLongClick(position,list.get(position).getId());
-                    }
-                });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    listener.onLongClick(position,list.get(position).getId());
+                    return false;
+                }
+            });
         }
     }
 
