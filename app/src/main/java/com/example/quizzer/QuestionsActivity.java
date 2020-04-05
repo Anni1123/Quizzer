@@ -173,7 +173,7 @@ public class QuestionsActivity extends AppCompatActivity {
         for (int i=0;i<4;i++){
             optionlist.getChildAt(i).setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#989898")));
         }
-        view.animate().alpha(value).scaleY(value).scaleY(value).setDuration(500).setStartDelay(100).setInterpolator(new DecelerateInterpolator())
+        view.animate().alpha(value).scaleY(value).scaleY(value).setDuration(500).setStartDelay(0).setInterpolator(new DecelerateInterpolator())
                 .setListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animation) {

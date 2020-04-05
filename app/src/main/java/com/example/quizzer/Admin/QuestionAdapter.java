@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,10 +45,12 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.viewho
 
     class viewholder extends RecyclerView.ViewHolder{
         private TextView quest,answer;
+        private ImageButton delete;
         public viewholder(@NonNull View itemView) {
             super(itemView);
             quest=itemView.findViewById(R.id.quest);
             answer=itemView.findViewById(R.id.ans);
+            delete=itemView.findViewById(R.id.deleteing);
         }
         private void setData(String question, String answer, final int position){
             this.quest.setText(position+1+","+question);
@@ -62,13 +65,12 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.viewho
                     itemView.getContext().startActivity(editintent);
                 }
             });
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    listener.onLongClick(position,list.get(position).getId());
-                    return false;
-                }
-            });
+            delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onLongClick(position,list.get(position).getId());
+                    }
+                });
         }
     }
 

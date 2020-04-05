@@ -104,7 +104,8 @@ public class QuestionActivity extends AppCompatActivity {
                                     }
                                 });
                             }
-                        });
+                        }).setNegativeButton("Cancel",null)
+                        .setIcon(android.R.drawable.ic_dialog_alert).show();
             }
         });
         excel.setOnClickListener(new View.OnClickListener() {

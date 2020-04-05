@@ -78,7 +78,7 @@ public class CategoriesActivity extends AppCompatActivity {
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         list=new ArrayList<>();
-        categoriesAdapter=new CategoriesAdapter(list, new CategoriesAdapter.DeleteListener() {
+        categoriesAdapter=new CategoriesAdapter(list,new CategoriesAdapter.DeleteListener() {
             @Override
             public void onDelete(final String key, final int position) {
                 new AlertDialog.Builder(CategoriesActivity.this,R.style.Theme_AppCompat_Light_Dialog).
