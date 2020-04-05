@@ -52,6 +52,16 @@ public class GridAdapter extends BaseAdapter {
                 parent.getContext().startActivity(questionIntent);
             }
         });
+       view.setOnLongClickListener(new View.OnLongClickListener() {
+           @Override
+           public boolean onLongClick(View v) {
+               Intent questionIntent=new Intent(parent.getContext(),AllQuestionActivity.class);
+               questionIntent.putExtra("category",category);
+               questionIntent.putExtra("setId",sets.get(position));
+               parent.getContext().startActivity(questionIntent);
+               return false;
+           }
+       });
         ((TextView)view.findViewById(R.id.textView)).setText(String.valueOf(position+1));
         return view;
     }

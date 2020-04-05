@@ -150,7 +150,7 @@ public class QuestionsActivity extends AppCompatActivity {
                     });
                 }else {
                     Toast.makeText(QuestionsActivity.this,"no questions",Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(QuestionsActivity.this,SetsActivity.class));
+
                 }
                 load.dismiss();
             }
