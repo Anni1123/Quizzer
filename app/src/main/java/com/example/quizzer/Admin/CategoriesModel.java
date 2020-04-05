@@ -27,14 +27,6 @@ public class CategoriesModel {
         this.key = key;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public List<String> getSets() {
         return sets;
     }
@@ -43,10 +35,9 @@ public class CategoriesModel {
         this.sets = sets;
     }
 
-    public CategoriesModel(String name, String key, String url, List<String> sets) {
+    public CategoriesModel(String name, String key, List<String> sets) {
         this.name = name;
         this.key = key;
-        this.url = url;
         this.sets = sets;
     }
 

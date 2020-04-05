@@ -176,8 +176,10 @@ public class QuestionActivity extends AppCompatActivity {
                 final List<QuestionsModel> models=new ArrayList<>();
 
                 try {
-                    InputStream inputStream=getContentResolver().openInputStream(file);
-                    XSSFWorkbook workbook=new XSSFWorkbook(inputStream);
+                    XSSFWorkbook workbook;
+                    try (InputStream inputStream = getContentResolver().openInputStream(file)) {
+                        workbook = new XSSFWorkbook(inputStream);
+                    }
                     XSSFSheet sheet=workbook.getSheetAt(0);
                     FormulaEvaluator formulaEvaluator=workbook.getCreationHelper().createFormulaEvaluator();
                     int rowscount=sheet.getPhysicalNumberOfRows();

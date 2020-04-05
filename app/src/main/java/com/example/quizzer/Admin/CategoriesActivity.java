@@ -121,7 +121,7 @@ public class CategoriesActivity extends AppCompatActivity {
                     for(DataSnapshot dataSnapshot2:dataSnapshot1.child("sets").getChildren()){
                         sets.add(dataSnapshot2.getKey());
                     }
-                    list.add(new CategoriesModel(dataSnapshot1.child("name").getValue().toString(),dataSnapshot1.child("url").getValue().toString()
+                    list.add(new CategoriesModel(dataSnapshot1.child("name").getValue().toString()
                             ,dataSnapshot1.getKey(),sets));
                 }
                 categoriesAdapter.notifyDataSetChanged();
@@ -240,7 +240,7 @@ public class CategoriesActivity extends AppCompatActivity {
     private void uploadName(){
         Map<String ,Object> map=new HashMap<>();
         map.put("name",name.getText().toString());
-        map.put("url",downloadUrl);
+
         map.put("sets",0);
         final FirebaseDatabase database=FirebaseDatabase.getInstance();
         final String id= UUID.randomUUID().toString();
@@ -248,7 +248,7 @@ public class CategoriesActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    list.add(new CategoriesModel(name.getText().toString(),id, downloadUrl,new ArrayList<String>()));
+                    list.add(new CategoriesModel(name.getText().toString(),id,new ArrayList<String>()));
                     categoriesAdapter.notifyDataSetChanged();
                 }
                 load.dismiss();
