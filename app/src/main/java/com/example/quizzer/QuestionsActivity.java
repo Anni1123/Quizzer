@@ -12,10 +12,12 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +37,7 @@ import java.util.List;
 public class QuestionsActivity extends AppCompatActivity {
     FirebaseDatabase database=FirebaseDatabase.getInstance();
     DatabaseReference reference=database.getReference();
-    private TextView quest,noIndicator;
+    private TextView quest,noIndicator,timer;
     private FloatingActionButton bookmark;
     private LinearLayout optionlist;
     private Button share,next;
@@ -44,6 +46,7 @@ public class QuestionsActivity extends AppCompatActivity {
     List<QuestionModel> list;
     private int score=0;
     private String setId;
+    public static final long COUNT_DOWN= 30000;
     private Dialog load;
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
