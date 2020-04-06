@@ -43,7 +43,7 @@ public class QuestionsActivity extends AppCompatActivity {
     private Button share,next;
     private int count=0;
     private int position=0;
-    List<QuestionModel> list;
+    public static List<QuestionModel> list;
     private int score=0;
     private String setId;
     public static final long COUNT_DOWN= 30000;
