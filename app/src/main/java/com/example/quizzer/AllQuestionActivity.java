@@ -61,6 +61,8 @@ public class AllQuestionActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
                     list.add(dataSnapshot1.getValue(AllQuestionModel.class));
+                    Toast.makeText(AllQuestionActivity.this,"Laoded Here Successfully", Toast.LENGTH_LONG).show();
+
                 }
                 if(list.size()>0) {
                     for (int i = 0; i < 4; i++) {
